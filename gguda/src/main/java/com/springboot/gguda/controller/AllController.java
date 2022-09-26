@@ -6,6 +6,7 @@ import com.springboot.gguda.result.MainResult;
 import com.springboot.gguda.service.MemberService;
 import com.springboot.gguda.service.ProductService;
 import com.springboot.gguda.service.QuestionService;
+import com.springboot.gguda.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,17 @@ public class AllController {
     private final ProductService productService;
     private final QuestionService questionService;
     private final MemberService memberService;
+    private final ReviewService reviewService;
 
     @Autowired
-    public AllController(ProductService productService, QuestionService questionService, MemberService memberService) {
+    public AllController(ProductService productService,
+                         QuestionService questionService,
+                         MemberService memberService,
+                         ReviewService reviewService) {
         this.productService = productService;
         this.questionService = questionService;
         this.memberService = memberService;
+        this.reviewService = reviewService;
     }
 
 
@@ -47,10 +53,11 @@ public class AllController {
     @GetMapping(value = "/product/{product_name}") // 디테일페이지에 해당하는 상품정보 불러오기
     public DetailResult getProduct(String product_name) {
         ProductResponseDto productResponseDto = productService.getProduct(product_name);
-        List<QuestionResponseDto> questionResponseDto = productService.getQuestion(productResponseDto.getId());
+        List<QuestionResponseDto> questionResponseDtos = productService.getQuestion(productResponseDto.getId());
+        List<ReviewResponseDto> reviewResponseDtos = productService.getReview(productResponseDto.getId());
         // 그상품의 id에 해당하는 질문리스트 가져오기
 
-        return new DetailResult(productResponseDto, questionResponseDto);
+        return new DetailResult(productResponseDto, questionResponseDtos, reviewResponseDtos);
     }
 
     // 후기, 질문, 연관상품 리턴하는 API도 작성해야한다.
@@ -75,6 +82,13 @@ public class AllController {
         MemberResponseDto memberResponseDto = memberService.saveMemberDto(memberDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(memberResponseDto);
+    }
+
+    @PostMapping(value = "register/review") // 후기 등록하기
+    public ResponseEntity<ReviewResponseDto> createReview(@RequestBody ReviewDto reviewDto) {
+        ReviewResponseDto reviewResponseDto = reviewService.saveReviewDto(reviewDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(reviewResponseDto);
     }
 
 

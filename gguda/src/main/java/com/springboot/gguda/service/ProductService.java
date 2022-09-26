@@ -3,6 +3,7 @@ package com.springboot.gguda.service;
 import com.springboot.gguda.data.dto.ProductDto;
 import com.springboot.gguda.data.dto.ProductResponseDto;
 import com.springboot.gguda.data.dto.QuestionResponseDto;
+import com.springboot.gguda.data.dto.ReviewResponseDto;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public interface ProductService {
     ProductResponseDto getProduct(String name);
 
     List<QuestionResponseDto> getQuestion(Long id);
+
+    List<ReviewResponseDto> getReview(Long id);
 
 //    ProductResponseDto getProduct(Long number);
 //

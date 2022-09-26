@@ -3,10 +3,13 @@ package com.springboot.gguda.service.impl;
 import com.springboot.gguda.data.dto.ProductDto;
 import com.springboot.gguda.data.dto.ProductResponseDto;
 import com.springboot.gguda.data.dto.QuestionResponseDto;
+import com.springboot.gguda.data.dto.ReviewResponseDto;
 import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.entity.Question;
+import com.springboot.gguda.data.entity.Review;
 import com.springboot.gguda.data.repository.ProductRepository;
 import com.springboot.gguda.data.repository.QuestionRepository;
+import com.springboot.gguda.data.repository.ReviewRepository;
 import com.springboot.gguda.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +22,15 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final QuestionRepository questionRepository;
+    private final ReviewRepository reviewRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, QuestionRepository questionRepository) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              QuestionRepository questionRepository,
+                              ReviewRepository reviewRepository) {
         this.productRepository = productRepository;
         this.questionRepository = questionRepository;
+        this.reviewRepository = reviewRepository;
     }
 
 
@@ -182,6 +189,27 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return questionResponseDtoList;
+    }
+
+    @Override
+    public List<ReviewResponseDto> getReview(Long id) {
+        List<Review> reviews = reviewRepository.findAllByProductIdOrderByRegDateDesc(id);
+
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+
+        for(Review review : reviews){
+            ReviewResponseDto dto = ReviewResponseDto.builder()
+                    .id(review.getId())
+                    .content(review.getContent())
+                    .stars(review.getStars())
+                    .productId(review.getProduct().getId())
+                    .memberId(review.getMember().getId())
+                    .build();
+
+            reviewResponseDtoList.add(dto);
+        }
+
+        return reviewResponseDtoList;
     }
 
 
