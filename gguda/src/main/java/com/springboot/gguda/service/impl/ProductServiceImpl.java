@@ -1,10 +1,12 @@
 package com.springboot.gguda.service.impl;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.springboot.gguda.data.dto.ProductDto;
 import com.springboot.gguda.data.dto.ProductResponseDto;
+import com.springboot.gguda.data.dto.QuestionResponseDto;
 import com.springboot.gguda.data.entity.Product;
+import com.springboot.gguda.data.entity.Question;
 import com.springboot.gguda.data.repository.ProductRepository;
+import com.springboot.gguda.data.repository.QuestionRepository;
 import com.springboot.gguda.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,15 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, QuestionRepository questionRepository) {
         this.productRepository = productRepository;
+        this.questionRepository = questionRepository;
     }
 
-    @Autowired
-    JPAQueryFactory jpaQueryFactory;
+
 
     @Override
     public List<ProductResponseDto> getPopularTop10Product() {
@@ -154,5 +157,32 @@ public class ProductServiceImpl implements ProductService {
 
         return productResponseDto;
     }
+
+    @Override
+    public List<QuestionResponseDto> getQuestion(Long id) {
+
+        // 아이디에해당하는 질문리스트받기
+
+        List<Question> questions = questionRepository.findAllByProductIdOrderByRegDateDesc(id);
+
+        List<QuestionResponseDto> questionResponseDtoList = new ArrayList<>();
+
+        for(Question question : questions){
+            QuestionResponseDto dto = QuestionResponseDto.builder()
+                    .id(question.getId())
+                    .title(question.getTitle())
+                    .content(question.getContent())
+                    .privateWhether(question.getPrivateWhether())
+                    .regDate(question.getRegDate())
+                    .productId(question.getProduct().getId())
+                    .memberId(question.getMember().getId())
+                    .build();
+
+            questionResponseDtoList.add(dto);
+        }
+
+        return questionResponseDtoList;
+    }
+
 
 }

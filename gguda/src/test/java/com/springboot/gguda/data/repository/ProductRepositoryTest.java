@@ -2,7 +2,11 @@ package com.springboot.gguda.data.repository;
 
 import com.springboot.gguda.data.dto.ProductResponseDto;
 import com.springboot.gguda.data.entity.Product;
+import com.springboot.gguda.data.entity.Question;
+import org.hibernate.annotations.Parameter;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,15 +20,18 @@ class ProductRepositoryTest {
 
     @Autowired
     ProductRepository productRepository;
+    QuestionRepository questionRepository;
 
-    @Test
-    void findTop10ByOrderBySalesDesc() {
-//        List<Product> all = productRepository.findTop10OrderBySalesDesc();
-//        // 판매순으로 가져오기
-//        System.out.println(all);
+    @ParameterizedTest(name = "id")
+    @ValueSource(longs = 1L)
+    void findAllByIdOrderByRegDateDesc(Long id) {
+        List<Question> questions = questionRepository.findAllByProductIdOrderByRegDateDesc(1L);
+        System.out.println(questions);
 ////        List<Product> samsungNotebook10 = productRepository.findTop10ByNameAndBrandAndOrderBySalesDesc("모니터","벤큐");
 //
 
-
     }
+
+
+
 }

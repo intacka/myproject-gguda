@@ -2,18 +2,15 @@ package com.springboot.gguda.data.dto;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
-public class MemberDto {
+@ToString
+@Setter
+@Getter
+public class MemberResponseDto {
 
+    private Long id;
     private String memberId; // 아이디
     private String memberPw; // 비밀번호
     private String email; // 이메일
@@ -26,5 +23,4 @@ public class MemberDto {
     private Integer marketingConsent; // 마케팅정보수신동의여부
     private Integer reserves; // 적립금
     private Integer buisnessReg; // 사업자등록여부
-
 }
