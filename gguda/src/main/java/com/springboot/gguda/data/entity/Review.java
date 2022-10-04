@@ -1,9 +1,6 @@
 package com.springboot.gguda.data.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,8 +10,9 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "review")
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +23,6 @@ public class Review {
 
     @Column(name = "stars")
     private Integer stars;                      // 평점
-
-    @Column(name = "reg_date")                  // 등록 날짜
-    private Date regDate;
 
     @ManyToOne
     @JoinColumn(name = "product_id")            // Product 엔티티와 다대일설정. 외래키 이름 = "product_id"

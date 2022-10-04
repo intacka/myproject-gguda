@@ -1,11 +1,9 @@
 package com.springboot.gguda.service.impl;
 
-import com.springboot.gguda.data.dto.ProductDto;
-import com.springboot.gguda.data.dto.ProductResponseDto;
-import com.springboot.gguda.data.dto.QuestionDto;
-import com.springboot.gguda.data.dto.QuestionResponseDto;
+import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.entity.Question;
+import com.springboot.gguda.data.entity.Review;
 import com.springboot.gguda.data.repository.MemberRepository;
 import com.springboot.gguda.data.repository.ProductRepository;
 import com.springboot.gguda.data.repository.QuestionRepository;
@@ -37,7 +35,6 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = new Question();
         question.setTitle(questionDto.getTitle());
         question.setContent(questionDto.getContent());
-        question.setRegDate(questionDto.getRegDate());
         question.setPrivateWhether(questionDto.getPrivateWhether());
         question.setProduct(productRepository.findById(questionDto.getProductId()).get());
         question.setMember(memberRepository.findById(questionDto.getMemberId()).get());
@@ -49,10 +46,36 @@ public class QuestionServiceImpl implements QuestionService {
         questionResponseDto.setTitle(question.getTitle());
         questionResponseDto.setPrivateWhether(question.getPrivateWhether());
         questionResponseDto.setId(question.getId());
-        questionResponseDto.setRegDate(question.getRegDate());
+        questionResponseDto.setCreatedAt(question.getCreatedAt());
+        questionResponseDto.setUpdatedAt(question.getUpdatedAt());
         questionResponseDto.setProductId(question.getProduct().getId());
         questionResponseDto.setMemberId(question.getMember().getId());
 
         return questionResponseDto;
+    }
+
+    @Override
+    public List<QuestionResponseDto> getQuestionList(Long id) {
+
+        List<Question> questions = questionRepository.findAllByMemberIdOrderByCreatedAtDesc(id);
+
+        List<QuestionResponseDto> questionResponseDtoList = new ArrayList<>();
+
+        for(Question question : questions){
+            QuestionResponseDto dto = QuestionResponseDto.builder()
+                    .id(question.getId())
+                    .title(question.getTitle())
+                    .content(question.getContent())
+                    .privateWhether(question.getPrivateWhether())
+                    .productId(question.getProduct().getId())
+                    .memberId(question.getMember().getId())
+                    .createdAt(question.getCreatedAt())
+                    .updatedAt(question.getUpdatedAt())
+                    .build();
+
+            questionResponseDtoList.add(dto);
+        }
+
+        return questionResponseDtoList;
     }
 }

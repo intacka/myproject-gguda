@@ -10,8 +10,9 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "member")
-public class Member {
+public class Member extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +28,7 @@ public class Member {
     private String email; // 이메일
 
     @Column(name = "parter_autho")
-    private Integer parterAutho; // 파트너스권한
-
-    @Column(name = "cospo_autho")
-    private Integer cospoAutho; // 코스포권한
+    private Integer parterAutho; // 파트너스권한     NO:0 , YES:1
 
     @Column(name = "phone_num")
     private Integer phoneNum; // 전화번호

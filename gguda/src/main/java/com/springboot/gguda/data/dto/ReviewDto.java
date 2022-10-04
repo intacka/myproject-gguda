@@ -13,7 +13,6 @@ public class ReviewDto {
 
     private String content;                     // 내용
     private Integer stars;            // 평점
-    private Date regDate;
     private Long productId;
     private Long memberId;
 

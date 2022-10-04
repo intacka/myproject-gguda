@@ -27,16 +27,6 @@ public class MemberServiceImpl implements MemberService {
         Member member = new Member();
         member.setMemberId(memberDto.getMemberId());
         member.setMemberPw(memberDto.getMemberPw());
-        member.setEmail(memberDto.getEmail());
-        member.setParterAutho(memberDto.getParterAutho());
-        member.setCospoAutho(memberDto.getCospoAutho());
-        member.setPhoneNum(memberDto.getPhoneNum());
-        member.setAddress(memberDto.getAddress());
-        member.setGender(memberDto.getGender());
-        member.setDateOfBirth(memberDto.getDateOfBirth());
-        member.setMarketingConsent(memberDto.getMarketingConsent());
-        member.setReserves(memberDto.getReserves());
-        member.setBuisnessReg(memberDto.getBuisnessReg());
 
         memberRepository.save(member);
 
@@ -45,7 +35,8 @@ public class MemberServiceImpl implements MemberService {
         memberResponseDto.setMemberPw(member.getMemberPw());
         memberResponseDto.setEmail(member.getEmail());
         memberResponseDto.setParterAutho(member.getParterAutho());
-        memberResponseDto.setCospoAutho(member.getCospoAutho());
+        memberResponseDto.setCreatedAt(member.getCreatedAt());
+        memberResponseDto.setUpdatedAt(member.getUpdatedAt());
         memberResponseDto.setPhoneNum(member.getPhoneNum());
         memberResponseDto.setAddress(member.getAddress());
         memberResponseDto.setGender(member.getGender());
@@ -57,4 +48,28 @@ public class MemberServiceImpl implements MemberService {
 
         return memberResponseDto;
     }
+
+    @Override
+    public MemberResponseDto getMember(Long id) {
+        Member member = memberRepository.getById(id);
+
+        MemberResponseDto memberResponseDto = new MemberResponseDto();
+        memberResponseDto.setId(member.getId());
+        memberResponseDto.setMemberId(member.getMemberId());
+        memberResponseDto.setMemberPw(member.getMemberPw());
+        memberResponseDto.setEmail(member.getEmail());
+        memberResponseDto.setParterAutho(member.getParterAutho());
+        memberResponseDto.setCreatedAt(member.getCreatedAt());
+        memberResponseDto.setUpdatedAt(member.getUpdatedAt());
+        memberResponseDto.setPhoneNum(member.getPhoneNum());
+        memberResponseDto.setAddress(member.getAddress());
+        memberResponseDto.setGender(member.getGender());
+        memberResponseDto.setDateOfBirth(member.getDateOfBirth());
+        memberResponseDto.setMarketingConsent(member.getMarketingConsent());
+        memberResponseDto.setReserves(member.getReserves());
+        memberResponseDto.setBuisnessReg(member.getBuisnessReg());
+
+        return memberResponseDto;
+    }
+
 }

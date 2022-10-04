@@ -25,7 +25,7 @@ class ProductRepositoryTest {
     @ParameterizedTest(name = "id")
     @ValueSource(longs = 1L)
     void findAllByIdOrderByRegDateDesc(Long id) {
-        List<Question> questions = questionRepository.findAllByProductIdOrderByRegDateDesc(1L);
+        List<Question> questions = questionRepository.findAllByProductIdOrderByCreatedAtDesc(1L);
         System.out.println(questions);
 ////        List<Product> samsungNotebook10 = productRepository.findTop10ByNameAndBrandAndOrderBySalesDesc("모니터","벤큐");
 //

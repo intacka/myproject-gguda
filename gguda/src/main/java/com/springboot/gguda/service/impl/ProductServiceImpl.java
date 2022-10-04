@@ -12,6 +12,7 @@ import com.springboot.gguda.data.repository.QuestionRepository;
 import com.springboot.gguda.data.repository.ReviewRepository;
 import com.springboot.gguda.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,9 +47,9 @@ public class ProductServiceImpl implements ProductService {
             ProductResponseDto dto = ProductResponseDto.builder()
                     .id(product.getId())
                     .name(product.getName())
-                    .productType(product.getProductType())
                     .price(product.getPrice())
-                    .regDate(product.getRegDate())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
                     .sales(product.getSales())
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
@@ -72,9 +73,9 @@ public class ProductServiceImpl implements ProductService {
             ProductResponseDto dto = ProductResponseDto.builder()
                     .id(product.getId())
                     .name(product.getName())
-                    .productType(product.getProductType())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
                     .price(product.getPrice())
-                    .regDate(product.getRegDate())
                     .sales(product.getSales())
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
@@ -98,9 +99,9 @@ public class ProductServiceImpl implements ProductService {
             ProductResponseDto dto = ProductResponseDto.builder()
                     .id(product.getId())
                     .name(product.getName())
-                    .productType(product.getProductType())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
                     .price(product.getPrice())
-                    .regDate(product.getRegDate())
                     .sales(product.getSales())
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
@@ -122,9 +123,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDto saveProductDto(ProductDto productDto) {
         Product product = new Product();
         product.setPrice(productDto.getPrice());
-        product.setProductType(productDto.getProductType());
         product.setName(productDto.getName());
-        product.setRegDate(productDto.getRegDate());
         product.setSales(productDto.getSales());
         product.setBrand(productDto.getBrand());
         product.setStock(productDto.getStock());
@@ -134,9 +133,9 @@ public class ProductServiceImpl implements ProductService {
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setPrice(product.getPrice());
-        productResponseDto.setProductType(product.getProductType());
+        productResponseDto.setCreatedAt(product.getCreatedAt());
+        productResponseDto.setUpdatedAt(product.getUpdatedAt());
         productResponseDto.setName(product.getName());
-        productResponseDto.setRegDate(product.getRegDate());
         productResponseDto.setSales(product.getSales());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
@@ -147,15 +146,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDto getProduct(String name) {
-        Product product = productRepository.findByNameContaining(name);
+    public ProductResponseDto getProduct(Long id) {
+        Product product = productRepository.getById(id);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setId(product.getId());
         productResponseDto.setPrice(product.getPrice());
-        productResponseDto.setProductType(product.getProductType());
+        productResponseDto.setCreatedAt(product.getCreatedAt());
+        productResponseDto.setUpdatedAt(product.getUpdatedAt());
         productResponseDto.setName(product.getName());
-        productResponseDto.setRegDate(product.getRegDate());
         productResponseDto.setSales(product.getSales());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
@@ -170,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 
         // 아이디에해당하는 질문리스트받기
 
-        List<Question> questions = questionRepository.findAllByProductIdOrderByRegDateDesc(id);
+        List<Question> questions = questionRepository.findAllByProductIdOrderByCreatedAtDesc(id);
 
         List<QuestionResponseDto> questionResponseDtoList = new ArrayList<>();
 
@@ -180,7 +179,8 @@ public class ProductServiceImpl implements ProductService {
                     .title(question.getTitle())
                     .content(question.getContent())
                     .privateWhether(question.getPrivateWhether())
-                    .regDate(question.getRegDate())
+                    .createdAt(question.getCreatedAt())
+                    .updatedAt(question.getUpdatedAt())
                     .productId(question.getProduct().getId())
                     .memberId(question.getMember().getId())
                     .build();
@@ -193,7 +193,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ReviewResponseDto> getReview(Long id) {
-        List<Review> reviews = reviewRepository.findAllByProductIdOrderByRegDateDesc(id);
+        List<Review> reviews = reviewRepository.findAllByProductIdOrderByCreatedAtDesc(id);
 
         List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
 
@@ -202,6 +202,8 @@ public class ProductServiceImpl implements ProductService {
                     .id(review.getId())
                     .content(review.getContent())
                     .stars(review.getStars())
+                    .createdAt(review.getCreatedAt())
+                    .updatedAt(review.getUpdatedAt())
                     .productId(review.getProduct().getId())
                     .memberId(review.getMember().getId())
                     .build();
@@ -210,6 +212,81 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return reviewResponseDtoList;
+    }
+
+    @Override
+    public List<ProductResponseDto> getAllProduct() {
+        List<Product> products = productRepository.findAll(Sort.by(Sort.Direction.DESC, "brand"));
+
+        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+
+        for(Product product : products){ // 3
+            ProductResponseDto dto = ProductResponseDto.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
+                    .price(product.getPrice())
+                    .sales(product.getSales())
+                    .brand(product.getBrand())
+                    .salesType(product.getSalesType())
+                    .stock(product.getStock())
+                    .build();
+
+            productResponseDtoList.add(dto);
+        }
+
+        return productResponseDtoList;
+    }
+
+    @Override
+    public List<ProductResponseDto> getZeroRental(int value) {
+        List<Product> products = productRepository.findAllByPriceIsLessThanEqualOrderBySalesDesc(value);
+
+        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+
+        for(Product product : products) {
+            ProductResponseDto dto = ProductResponseDto.builder()
+                    .id(product.getId())
+                    .price(product.getPrice())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
+                    .name(product.getName())
+                    .sales(product.getSales())
+                    .brand(product.getBrand())
+                    .stock(product.getStock())
+                    .salesType(product.getSalesType())
+                    .build();
+
+            productResponseDtoList.add(dto);
+        }
+
+        return productResponseDtoList;
+    }
+
+    @Override
+    public List<ProductResponseDto> getProductListByBrand(String brand) {
+        List<Product> products = productRepository.findAllByBrand(brand);
+
+        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+
+        for(Product product : products) {
+            ProductResponseDto dto = ProductResponseDto.builder()
+                    .id(product.getId())
+                    .price(product.getPrice())
+                    .createdAt(product.getCreatedAt())
+                    .updatedAt(product.getUpdatedAt())
+                    .name(product.getName())
+                    .sales(product.getSales())
+                    .brand(product.getBrand())
+                    .stock(product.getStock())
+                    .salesType(product.getSalesType())
+                    .build();
+
+            productResponseDtoList.add(dto);
+        }
+
+        return productResponseDtoList;
     }
 
 

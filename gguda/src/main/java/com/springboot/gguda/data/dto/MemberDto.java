@@ -18,7 +18,6 @@ public class MemberDto {
     private String memberPw; // 비밀번호
     private String email; // 이메일
     private Integer parterAutho; // 파트너스권한
-    private Integer cospoAutho; // 코스포권한
     private Integer phoneNum; // 전화번호
     private String address; // 주소
     private Integer gender; // 성별

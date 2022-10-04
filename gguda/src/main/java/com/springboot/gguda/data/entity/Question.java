@@ -1,9 +1,6 @@
 package com.springboot.gguda.data.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,8 +10,9 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "question")
-public class Question {
+public class Question extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +26,6 @@ public class Question {
 
     @Column(name = "private_whether")
     private Integer privateWhether;            // 비밀여부 - 0:No, 1:Yes
-
-    @Column(name = "reg_date")
-    private Date regDate; // 등록날짜
 
     @ManyToOne
     @JoinColumn(name = "product_id")            // Product 엔티티와 다대일설정. 외래키 이름 = "product_id"
