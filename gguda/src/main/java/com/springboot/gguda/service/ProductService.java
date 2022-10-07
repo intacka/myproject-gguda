@@ -1,14 +1,12 @@
 package com.springboot.gguda.service;
 
-import com.springboot.gguda.data.dto.ProductDto;
-import com.springboot.gguda.data.dto.ProductResponseDto;
-import com.springboot.gguda.data.dto.QuestionResponseDto;
-import com.springboot.gguda.data.dto.ReviewResponseDto;
+import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
+
     List<ProductResponseDto> getPopularTop10Product();
 
     List<ProductResponseDto> getTop10Product(String name);
@@ -21,6 +19,8 @@ public interface ProductService {
 
     List<QuestionResponseDto> getQuestion(Long id);
 
+    List<QuestionAnswerResponseDto> getQuestionAnswer(Long id);
+
     List<ReviewResponseDto> getReview(Long id);
 
     List<ProductResponseDto> getAllProduct();
@@ -29,5 +29,9 @@ public interface ProductService {
 
     List<ProductResponseDto> getProductListByBrand(String brand);
 
+
+    ProductResponseDto putProduct(ProductDto productDto, Long id);
+
+    ProductResponseDto deleteProduct(Long id);
 
 }

@@ -12,19 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CouponAdminAdminServiceImpl implements CouponAdminService {
+public class CouponAdminServiceImpl implements CouponAdminService {
 
     private final CouponAdminRepository couponAdminRepository;
     private final MemberRepository memberRepository;
 
     @Autowired
-    public CouponAdminAdminServiceImpl(CouponAdminRepository couponAdminRepository, MemberRepository memberRepository) {
+    public CouponAdminServiceImpl(CouponAdminRepository couponAdminRepository, MemberRepository memberRepository) {
         this.couponAdminRepository = couponAdminRepository;
         this.memberRepository = memberRepository;
     }
 
     @Override
-    public List<CouponAdminResponseDto> getCouponList(Long id) {
+    public List<CouponAdminResponseDto> getCouponList(String id) {
 
         List<CouponAdmin> couponAdmins = couponAdminRepository.findAllByMemberIdOrderByCreatedAtDesc(id);
 
@@ -37,7 +37,7 @@ public class CouponAdminAdminServiceImpl implements CouponAdminService {
                     .name(couponAdmin.getName())
                     .rate(couponAdmin.getRate())
                     .exPeriod(couponAdmin.getExPeriod())
-                    .memberId(couponAdmin.getMember().getId())
+                    .memberId(couponAdmin.getMemberId())
                     .createdAt(couponAdmin.getCreatedAt())
                     .updatedAt(couponAdmin.getUpdatedAt())
                     .build();
@@ -56,7 +56,7 @@ public class CouponAdminAdminServiceImpl implements CouponAdminService {
         couponAdmin.setNum(couponAdminDto.getNum());
         couponAdmin.setName(couponAdminDto.getName());
         couponAdmin.setExPeriod(couponAdminDto.getExPeriod());
-        couponAdmin.setMember(memberRepository.findById(couponAdminDto.getMemberId()).get());
+        couponAdmin.setMemberId(couponAdmin.getMemberId());
 
         couponAdminRepository.save(couponAdmin);
 
@@ -68,7 +68,27 @@ public class CouponAdminAdminServiceImpl implements CouponAdminService {
         couponAdminResponseDto.setNum(couponAdmin.getNum());
         couponAdminResponseDto.setName(couponAdmin.getName());
         couponAdminResponseDto.setExPeriod(couponAdmin.getExPeriod());
-        couponAdminResponseDto.setMemberId(couponAdmin.getMember().getId());
+        couponAdminResponseDto.setMemberId(couponAdmin.getMemberId());
+
+        return couponAdminResponseDto;
+    }
+
+    @Override
+    public CouponAdminResponseDto getCouponAdminEntity(Long num, String memberId) {
+        CouponAdmin couponAdmin = couponAdminRepository.findByNum(num);
+
+        couponAdmin.setMemberId(memberId);
+        couponAdminRepository.save(couponAdmin);
+
+        CouponAdminResponseDto couponAdminResponseDto = new CouponAdminResponseDto();
+        couponAdminResponseDto.setId(couponAdmin.getId());
+        couponAdminResponseDto.setCreatedAt(couponAdmin.getCreatedAt());
+        couponAdminResponseDto.setUpdatedAt(couponAdmin.getUpdatedAt());
+        couponAdminResponseDto.setRate(couponAdmin.getRate());
+        couponAdminResponseDto.setNum(couponAdmin.getNum());
+        couponAdminResponseDto.setName(couponAdmin.getName());
+        couponAdminResponseDto.setExPeriod(couponAdmin.getExPeriod());
+        couponAdminResponseDto.setMemberId(couponAdmin.getMemberId());
 
         return couponAdminResponseDto;
     }

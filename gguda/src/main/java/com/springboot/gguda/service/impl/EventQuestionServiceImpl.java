@@ -77,4 +77,28 @@ public class EventQuestionServiceImpl implements EventQuestionService {
 
         return eventQuestionResponseDtoList;
     }
+
+    @Override
+    public List<EventQuestionResponseDto> getAllEventQuestion() {
+        List<EventQuestion> eventQuestions = eventQuestionRepository.findAllByOrderByCreatedAtDesc();
+
+        List<EventQuestionResponseDto> eventQuestionResponseDtoList = new ArrayList<>();
+
+        for(EventQuestion eventQuestion : eventQuestions){
+            EventQuestionResponseDto dto = EventQuestionResponseDto.builder()
+                    .id(eventQuestion.getId())
+                    .title(eventQuestion.getTitle())
+                    .content(eventQuestion.getContent())
+                    .privateWhether(eventQuestion.getPrivateWhether())
+                    .createdAt(eventQuestion.getCreatedAt())
+                    .updatedAt(eventQuestion.getUpdatedAt())
+                    .eventProductId(eventQuestion.getEventProduct().getId())
+                    .memberId(eventQuestion.getMember().getId())
+                    .build();
+
+            eventQuestionResponseDtoList.add(dto);
+        }
+
+        return eventQuestionResponseDtoList;
+    }
 }

@@ -1,13 +1,19 @@
 package com.springboot.gguda.service.impl;
 
+import com.springboot.gguda.data.dto.apply.ApplymentPartnersResponseDto;
 import com.springboot.gguda.data.dto.apply.EstimateElecDto;
 import com.springboot.gguda.data.dto.apply.EstimateElecResponseDto;
+import com.springboot.gguda.data.entity.apply.ApplymentPartners;
 import com.springboot.gguda.data.entity.apply.EstimateElec;
 import com.springboot.gguda.data.repository.EstimateElecRepository;
 import com.springboot.gguda.data.repository.MemberRepository;
 import com.springboot.gguda.service.EstimateElecService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EstimateElecServiceImpl implements EstimateElecService {
@@ -77,6 +83,81 @@ public class EstimateElecServiceImpl implements EstimateElecService {
         estimateElecResponseDto.setMemberId(estimateElec.getMember().getId());
         estimateElecResponseDto.setCreatedAt(estimateElec.getCreatedAt());
         estimateElecResponseDto.setUpdatedAt(estimateElec.getUpdatedAt());
+
+        return estimateElecResponseDto;
+    }
+
+    @Override
+    public List<EstimateElecResponseDto> getAllEstimateElec() {
+        List<EstimateElec> estimateElecs = estimateElecRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        List<EstimateElecResponseDto> estimateElecResponseDtoList = new ArrayList<>();
+
+        for(EstimateElec estimateElec : estimateElecs){ // 3
+            EstimateElecResponseDto dto = EstimateElecResponseDto.builder()
+                    .id(estimateElec.getId())
+                    .volumn(estimateElec.getVolumn())
+                    .monitorSize(estimateElec.getMonitorSize())
+                    .cpu(estimateElec.getCpu())
+                    .ram(estimateElec.getRam())
+                    .ssd(estimateElec.getSsd())
+                    .os(estimateElec.getOs())
+                    .others(estimateElec.getOthers())
+                    .internetSystem(estimateElec.getInternetSystem())
+                    .addProgram(estimateElec.getAddProgram())
+                    .link(estimateElec.getLink())
+                    .eventContent(estimateElec.getEventContent())
+                    .purpose(estimateElec.getPurpose())
+                    .installDate(estimateElec.getInstallDate())
+                    .collectDate(estimateElec.getCollectDate())
+                    .address(estimateElec.getAddress())
+                    .installYn(estimateElec.getInstallYn())
+                    .managerName(estimateElec.getManagerName())
+                    .managerEmail(estimateElec.getManagerEmail())
+                    .managerContact(estimateElec.getManagerContact())
+                    .taxEmail(estimateElec.getTaxEmail())
+                    .memberId(estimateElec.getMember().getId())
+                    .createdAt(estimateElec.getCreatedAt())
+                    .updatedAt(estimateElec.getUpdatedAt())
+                    .build();
+
+            estimateElecResponseDtoList.add(dto);
+        }
+
+        return estimateElecResponseDtoList;
+    }
+
+    @Override
+    public EstimateElecResponseDto getEstimateElec(Long id) {
+        EstimateElec estimateElec = estimateElecRepository.getById(id);
+
+        EstimateElecResponseDto estimateElecResponseDto = new EstimateElecResponseDto();
+        estimateElecResponseDto.setId(estimateElec.getId());
+        estimateElecResponseDto.setMonitorSize(estimateElec.getMonitorSize());
+        estimateElecResponseDto.setCpu(estimateElec.getCpu());
+        estimateElecResponseDto.setRam(estimateElec.getRam());
+        estimateElecResponseDto.setSsd(estimateElec.getSsd());
+        estimateElecResponseDto.setOs(estimateElec.getOs());
+        estimateElecResponseDto.setOthers(estimateElec.getOthers());
+        estimateElecResponseDto.setInternetSystem(estimateElec.getInternetSystem());
+        estimateElecResponseDto.setAddProgram(estimateElec.getAddProgram());
+        estimateElecResponseDto.setLink(estimateElec.getLink());
+        estimateElecResponseDto.setEventContent(estimateElec.getEventContent());
+        estimateElecResponseDto.setPurpose(estimateElec.getPurpose());
+        estimateElecResponseDto.setInstallDate(estimateElec.getInstallDate());
+        estimateElecResponseDto.setCollectDate(estimateElec.getCollectDate());
+        estimateElecResponseDto.setAddress(estimateElec.getAddress());
+        estimateElecResponseDto.setInstallYn(estimateElec.getInstallYn());
+        estimateElecResponseDto.setElevatorYn(estimateElec.getElevatorYn());
+        estimateElecResponseDto.setManagerName(estimateElec.getManagerName());
+        estimateElecResponseDto.setManagerContact(estimateElec.getManagerContact());
+        estimateElecResponseDto.setManagerEmail(estimateElec.getManagerEmail());
+        estimateElecResponseDto.setTaxEmail(estimateElec.getTaxEmail());
+        estimateElecResponseDto.setVolumn(estimateElec.getVolumn());
+        estimateElecResponseDto.setMemberId(estimateElec.getMember().getId());
+        estimateElecResponseDto.setCreatedAt(estimateElec.getCreatedAt());
+        estimateElecResponseDto.setUpdatedAt(estimateElec.getUpdatedAt());
+
 
         return estimateElecResponseDto;
     }

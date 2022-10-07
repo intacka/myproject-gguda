@@ -11,4 +11,6 @@ public interface EventQuestionRepository extends JpaRepository<EventQuestion, Lo
     List<EventQuestion> findAllByEventProductIdOrderByCreatedAtDesc(Long id); // id로 찾아야하니까.... Product_id를 어떻게 표현하지?
 
     List<EventQuestion> findAllByMemberIdOrderByCreatedAtDesc(Long id);
+
+    List<EventQuestion> findAllByOrderByCreatedAtDesc();
 }

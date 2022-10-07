@@ -13,4 +13,12 @@ public interface ReviewService {
     List<ReviewResponseDto> getReviewPage(String content, int page);
 
     List<ReviewResponseDto> getReviewList(Long id);
+
+    ReviewResponseDto getReview(Long id);
+
+    List<ReviewResponseDto> getAllReview();
+
+    ReviewResponseDto putReview(ReviewDto reviewDto, Long id);
+
+    void deleteReview(Long id);
 }

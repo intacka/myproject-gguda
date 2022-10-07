@@ -7,5 +7,9 @@ import java.util.List;
 
 public interface CouponAdminRepository extends JpaRepository<CouponAdmin, Long> {
 
-    List<CouponAdmin> findAllByMemberIdOrderByCreatedAtDesc(Long id);
+    List<CouponAdmin> findAllByMemberIdOrderByCreatedAtDesc(String id);
+
+    CouponAdmin findByNum(Long num);
+
+
 }

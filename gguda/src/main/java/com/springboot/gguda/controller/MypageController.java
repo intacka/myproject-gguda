@@ -1,10 +1,11 @@
 package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.*;
+import com.springboot.gguda.data.entity.CouponAdmin;
 import com.springboot.gguda.data.entity.Member;
+import com.springboot.gguda.data.repository.CouponAdminRepository;
 import com.springboot.gguda.data.repository.MemberRepository;
-import com.springboot.gguda.result.MemberResult;
-import com.springboot.gguda.result.WritingResult;
+import com.springboot.gguda.result.*;
 import com.springboot.gguda.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,15 @@ public class MypageController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final CouponAdminRepository couponAdminRepository;
     private final CouponAdminService couponAdminService;
     private final ReviewService reviewService;
     private final EventReviewService eventReviewService;
     private final QuestionService questionService;
     private final EventQuestionService eventQuestionService;
     private final OrderHistoryService orderHistoryService;
+    private final BasketService basketService;
+    private final EventBasketService eventBasketService;
 
     @Autowired
     public MypageController(MemberService memberService,
@@ -35,7 +39,10 @@ public class MypageController {
                             EventReviewService eventReviewService,
                             QuestionService questionService,
                             EventQuestionService eventQuestionService,
-                            OrderHistoryService orderHistoryService) {
+                            OrderHistoryService orderHistoryService,
+                            CouponAdminRepository couponAdminRepository,
+                            BasketService basketService,
+                            EventBasketService eventBasketService) {
         this.memberService = memberService;
         this.memberRepository = memberRepository;
         this.couponAdminService = couponAdminService;
@@ -44,6 +51,9 @@ public class MypageController {
         this.questionService = questionService;
         this.eventQuestionService = eventQuestionService;
         this.orderHistoryService = orderHistoryService;
+        this.couponAdminRepository = couponAdminRepository;
+        this.basketService = basketService;
+        this.eventBasketService = eventBasketService;
     }
 
     @PostMapping(value = "/delete")         // 회원탈퇴 API
@@ -85,8 +95,8 @@ public class MypageController {
         return myInfo;
     }
 
-    @GetMapping(value = "coupon")             // 회원이 가지고있는 쿠폰조회 API
-    public List<CouponAdminResponseDto> getCouponList(Long id) {
+    @GetMapping(value = "coupon")             // 회원MemberId(String)이 가지고있는 쿠폰조회 API
+    public List<CouponAdminResponseDto> getCouponList(String id) {
         List<CouponAdminResponseDto> couponAdminResponseDtos = couponAdminService.getCouponList(id);
 
         return couponAdminResponseDtos;
@@ -109,12 +119,32 @@ public class MypageController {
         return orderHistoryResponseDtos;
     }
 
-//    @PostMapping(value = "register/coupon/user") // 쿠폰등록하기(((((사용자용입니다)))))
-//    public ResponseEntity<CouponResponseDto> createCoupon(String num) {
-//        CouponResponseDto couponResponseDto = couponService.saveCouponDto(couponDto);
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(couponResponseDto);
-//    }
+    @PostMapping(value = "register/coupon/user") // 쿠폰등록하기(((((사용자용입니다))))) (일련번호로 등록하기)
+    public CouponRegResult createCoupon(Long num, String memberId) {
+        CouponAdminResponseDto couponAdminResponseDto = null;
+        String state;
+        int N;
+
+        CouponAdmin couponAdmin = couponAdminRepository.findByNum(num);
+
+        if (couponAdmin!=null) {
+            if(couponAdmin.getMemberId()==null) {
+                couponAdminResponseDto = couponAdminService.getCouponAdminEntity(num, memberId);
+                state = "성공적으로 쿠폰이 사용자에게 등록되었습니다.";
+                N = 0;
+            } else {
+                state = "다른사람에게 이미 등록된 쿠폰입니다!"; // 쿠폰을 다른사람이 쓰고있습니다!.
+                N = 1;
+            }
+
+        } else {
+            state = "쿠폰일련번호가 맞지 않습니다."; // 쿠폰일련번호가 맞지않습니다.
+            N = 2;
+        }
+
+
+        return new CouponRegResult(N, state, couponAdminResponseDto);
+    }
 
     @PostMapping(value = "register/coupon/admin") // 쿠폰등록하기(((((관리자용입니다)))))
     public ResponseEntity<CouponAdminResponseDto> createCoupon(@RequestBody CouponAdminDto couponAdminDto) {
@@ -123,5 +153,32 @@ public class MypageController {
         return ResponseEntity.status(HttpStatus.OK).body(couponAdminResponseDto);
     }
 
+    @PostMapping(value = "addtion/basket")                      // 장바구니에 추가하기
+    public ResponseEntity<BasketResponseDto> addProductInBasket(Long productId, Long memberId, Long amount) {
+        BasketResponseDto basketResponseDto = basketService.addInBasket(productId, memberId, amount);
+
+        return ResponseEntity.status(HttpStatus.OK).body(basketResponseDto);
+    }
+
+    @GetMapping(value = "basket")               //   장바구니에 담긴 Product List return하기
+    public List<BasketResult> getBasketProductList(Long memberId) {
+        List<BasketResult> basketResultList = basketService.getBasketProductList(memberId);
+
+        return basketResultList;
+    }
+
+    @PostMapping(value = "addtion/event-basket")                      // 행사바구니에 행사용품 추가하기
+    public ResponseEntity<EventBasketResponseDto> addEventProductInEventBasket(Long eventProductId, Long memberId, Long amount) {
+        EventBasketResponseDto eventBasketResponseDto = eventBasketService.addInEventBasket(eventProductId, memberId, amount);
+
+        return ResponseEntity.status(HttpStatus.OK).body(eventBasketResponseDto);
+    }
+
+    @GetMapping(value = "event-basket")               //   행사바구니에 담긴 행사용품 List 나타내기
+    public List<EventBasketResult> getEventBasketProductList(Long memberId) {
+        List<EventBasketResult> eventBasketResultList = eventBasketService.getEventBasketEventProductList(memberId);
+
+        return eventBasketResultList;
+    }
 
 }

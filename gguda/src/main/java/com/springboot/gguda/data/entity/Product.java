@@ -31,7 +31,7 @@ public class Product extends BaseEntity{
     private Integer stock; // 재고량
 
     @Column(name = "sales_type")
-    private Integer salesType; // 판매상태(판매중,품절)
+    private Integer salesType; // 판매타입
 
     @Column(name = "brand")
     private String brand; // 브랜드

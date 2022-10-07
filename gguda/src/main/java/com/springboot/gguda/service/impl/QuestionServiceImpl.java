@@ -78,4 +78,28 @@ public class QuestionServiceImpl implements QuestionService {
 
         return questionResponseDtoList;
     }
+
+    @Override
+    public List<QuestionResponseDto> getAllQuestion() {
+        List<Question> questions = questionRepository.findAllByOrderByCreatedAtDesc();
+
+        List<QuestionResponseDto> questionResponseDtoList = new ArrayList<>();
+
+        for(Question question : questions){
+            QuestionResponseDto dto = QuestionResponseDto.builder()
+                    .id(question.getId())
+                    .title(question.getTitle())
+                    .content(question.getContent())
+                    .privateWhether(question.getPrivateWhether())
+                    .createdAt(question.getCreatedAt())
+                    .updatedAt(question.getUpdatedAt())
+                    .productId(question.getProduct().getId())
+                    .memberId(question.getMember().getId())
+                    .build();
+
+            questionResponseDtoList.add(dto);
+        }
+
+        return questionResponseDtoList;
+    }
 }

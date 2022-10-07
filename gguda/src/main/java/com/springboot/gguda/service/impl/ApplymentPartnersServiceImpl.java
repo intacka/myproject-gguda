@@ -1,9 +1,11 @@
 package com.springboot.gguda.service.impl;
 
+import com.springboot.gguda.data.dto.ProductResponseDto;
 import com.springboot.gguda.data.dto.apply.ApplymentPartnersDto;
 import com.springboot.gguda.data.dto.apply.ApplymentPartnersResponseDto;
 import com.springboot.gguda.data.dto.apply.EstimateElecDto;
 import com.springboot.gguda.data.dto.apply.EstimateElecResponseDto;
+import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.entity.apply.ApplymentPartners;
 import com.springboot.gguda.data.entity.apply.EstimateElec;
 import com.springboot.gguda.data.repository.ApplymentPartnersRepository;
@@ -12,7 +14,11 @@ import com.springboot.gguda.data.repository.MemberRepository;
 import com.springboot.gguda.service.ApplymentPartnersService;
 import com.springboot.gguda.service.EstimateElecService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ApplymentPartnersServiceImpl implements ApplymentPartnersService {
@@ -70,5 +76,38 @@ public class ApplymentPartnersServiceImpl implements ApplymentPartnersService {
         applymentPartnersResponseDto.setUpdatedAt(applymentPartners.getUpdatedAt());
 
         return applymentPartnersResponseDto;
+    }
+
+    @Override
+    public List<ApplymentPartnersResponseDto> getAllApplymentPartners() {
+        List<ApplymentPartners> applymentPartnersList = applymentPartnersRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        List<ApplymentPartnersResponseDto> applymentPartnersResponseDtoList = new ArrayList<>();
+
+        for(ApplymentPartners applymentPartners : applymentPartnersList){ // 3
+            ApplymentPartnersResponseDto dto = ApplymentPartnersResponseDto.builder()
+                    .id(applymentPartners.getId())
+                    .businessName(applymentPartners.getBusinessName())
+                    .businessNum(applymentPartners.getBusinessNum())
+                    .representative(applymentPartners.getRepresentative())
+                    .businessAddress(applymentPartners.getBusinessAddress())
+                    .serviceName(applymentPartners.getServiceName())
+                    .siteAddress(applymentPartners.getSiteAddress())
+                    .storeLocation(applymentPartners.getStoreLocation())
+                    .category(applymentPartners.getCategory())
+                    .dealMethod(applymentPartners.getDealMethod())
+                    .phoneNum(applymentPartners.getPhoneNum())
+                    .ggudaId(applymentPartners.getGgudaId())
+                    .adminId(applymentPartners.getAdminId())
+                    .etcContent(applymentPartners.getEtcContent())
+                    .memberId(applymentPartners.getMember().getId())
+                    .createdAt(applymentPartners.getCreatedAt())
+                    .updatedAt(applymentPartners.getUpdatedAt())
+                    .build();
+
+            applymentPartnersResponseDtoList.add(dto);
+        }
+
+        return applymentPartnersResponseDtoList;
     }
 }

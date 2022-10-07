@@ -11,4 +11,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findAllByProductIdOrderByCreatedAtDesc(Long id); // id로 찾아야하니까.... Product_id를 어떻게 표현하지?
 
     List<Question> findAllByMemberIdOrderByCreatedAtDesc(Long id);
+
+    List<Question> findAllByOrderByCreatedAtDesc();
 }

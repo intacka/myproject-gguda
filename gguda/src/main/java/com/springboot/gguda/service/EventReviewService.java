@@ -15,4 +15,12 @@ public interface EventReviewService {
     List<EventReviewResponseDto> getEventReviewPage(String content, int page);
 
     List<EventReviewResponseDto> getEventReviewList(Long id);
+
+    EventReviewResponseDto putEventReview(EventReviewDto eventReviewDto, Long id);
+
+    void deleteEventReview(Long id);
+
+    List<EventReviewResponseDto> getAllEventReview();
+
+    EventReviewResponseDto getEventReview(Long id);
 }

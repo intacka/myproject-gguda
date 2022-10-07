@@ -28,13 +28,11 @@ public class CouponAdmin extends BaseEntity{
     private Double rate;    // 할인율
 
     @Column(name = "ex_period")
-    private LocalDate exPeriod; // 유효기간
+    private String exPeriod; // 유효기간
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Column(name = "member_id")
+    private String memberId;    // 회원id
 
-    // 쿠폰일련번호, 유효기간 , member매핑은 CouponUser에게 맡기자
 
 
 }

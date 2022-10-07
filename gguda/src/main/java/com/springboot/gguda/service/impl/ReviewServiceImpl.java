@@ -1,8 +1,10 @@
 package com.springboot.gguda.service.impl;
 
+import com.springboot.gguda.data.dto.ProductResponseDto;
 import com.springboot.gguda.data.dto.QuestionResponseDto;
 import com.springboot.gguda.data.dto.ReviewDto;
 import com.springboot.gguda.data.dto.ReviewResponseDto;
+import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.entity.Question;
 import com.springboot.gguda.data.entity.Review;
 import com.springboot.gguda.data.repository.MemberRepository;
@@ -100,6 +102,71 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return reviewResponseDtoList;
+    }
+
+    @Override
+    public ReviewResponseDto getReview(Long id) {
+        Review review = reviewRepository.getById(id);
+
+        ReviewResponseDto reviewResponseDto = new ReviewResponseDto();
+        reviewResponseDto.setId(review.getId());
+        reviewResponseDto.setContent(review.getContent());
+        reviewResponseDto.setStars(review.getStars());
+        reviewResponseDto.setCreatedAt(review.getCreatedAt());
+        reviewResponseDto.setUpdatedAt(review.getUpdatedAt());
+        reviewResponseDto.setProductId(review.getProduct().getId());
+        reviewResponseDto.setMemberId(review.getMember().getId());
+
+        return reviewResponseDto;
+    }
+
+    @Override
+    public List<ReviewResponseDto> getAllReview() {
+        List<Review> reviews = reviewRepository.findAllByOrderByCreatedAtDesc();
+
+        List<ReviewResponseDto> reviewResponseDtoList = new ArrayList<>();
+
+        for(Review review : reviews){
+            ReviewResponseDto dto = ReviewResponseDto.builder()
+                    .id(review.getId())
+                    .content(review.getContent())
+                    .stars(review.getStars())
+                    .productId(review.getProduct().getId())
+                    .memberId(review.getMember().getId())
+                    .createdAt(review.getCreatedAt())
+                    .updatedAt(review.getUpdatedAt())
+                    .build();
+
+            reviewResponseDtoList.add(dto);
+        }
+
+        return reviewResponseDtoList;
+    }
+
+    @Override
+    public ReviewResponseDto putReview(ReviewDto reviewDto, Long id) {
+        Review review = reviewRepository.getById(id);
+
+        review.setContent(reviewDto.getContent());
+        review.setStars(reviewDto.getStars());
+
+        reviewRepository.save(review);
+
+        ReviewResponseDto reviewResponseDto = new ReviewResponseDto();
+        reviewResponseDto.setId(review.getId());
+        reviewResponseDto.setContent(review.getContent());
+        reviewResponseDto.setStars(review.getStars());
+        reviewResponseDto.setProductId(review.getProduct().getId());
+        reviewResponseDto.setMemberId(review.getMember().getId());
+        reviewResponseDto.setCreatedAt(review.getCreatedAt());
+        reviewResponseDto.setUpdatedAt(review.getUpdatedAt());
+
+        return reviewResponseDto;
+    }
+
+    @Override
+    public void deleteReview(Long id) {
+        reviewRepository.deleteById(id);
     }
 
 

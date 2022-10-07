@@ -2,14 +2,11 @@ package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.dto.apply.*;
-import com.springboot.gguda.data.entity.apply.ApplymentPartners;
-import com.springboot.gguda.data.entity.apply.EstimateElec;
 import com.springboot.gguda.result.DetailResult;
 import com.springboot.gguda.result.MainResult;
+import com.springboot.gguda.result.QAResult;
 import com.springboot.gguda.service.*;
-import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +18,8 @@ public class AllController {
 
     private final ProductService productService;
     private final QuestionService questionService;
+    private final QuestionAnswerService questionAnswerService;
+
     private final MemberService memberService;
     private final ReviewService reviewService;
     private final EstimateElecService estimateElecService;
@@ -30,15 +29,17 @@ public class AllController {
 
     @Autowired
     public AllController(ProductService productService,
-                         QuestionService questionService,
                          MemberService memberService,
                          ReviewService reviewService,
                          EstimateElecService estimateElecService,
                          EstimateTVService estimateTVService,
                          ApplymentPartnersService applymentPartnersService,
-                         EstimateEventService estimateEventService) {
+                         EstimateEventService estimateEventService,
+                         QuestionService questionService,
+                         QuestionAnswerService questionAnswerService) {
         this.productService = productService;
         this.questionService = questionService;
+        this.questionAnswerService = questionAnswerService;
         this.memberService = memberService;
         this.reviewService = reviewService;
         this.estimateElecService = estimateElecService;
@@ -66,11 +67,12 @@ public class AllController {
         ProductResponseDto productResponseDto = productService.getProduct(id);
         // 상품정보 가져오기
         List<QuestionResponseDto> questionResponseDtos = productService.getQuestion(id);
-        // 상품에 해당하는 질문리스트 가져오기
+        List<QuestionAnswerResponseDto> questionAnswerResponseDtos = productService.getQuestionAnswer(id);
+        // 상품에 해당하는 질문리스트, 답변리스트 가져오기
         List<ReviewResponseDto> reviewResponseDtos = productService.getReview(id);
         // 상품에 해당하는 후기리스트 가져오기
 
-        return new DetailResult(productResponseDto, questionResponseDtos, reviewResponseDtos);
+        return new DetailResult(productResponseDto, questionResponseDtos, questionAnswerResponseDtos, reviewResponseDtos);
     }
 
     //   0원렌탈,브랜드 API
@@ -81,7 +83,7 @@ public class AllController {
         return zero;
     }
 
-    @GetMapping(value = "/brand")           // 브랜드 API
+    @GetMapping(value = "/brand")           // 브랜드 API (전체상품목록 가져오기)
     public List<ProductResponseDto> getAllProduct() {
         List<ProductResponseDto> all = productService.getAllProduct();
 
@@ -110,6 +112,15 @@ public class AllController {
         return reviews;
     }
 
+    @GetMapping(value = "/review/detail")   // 후기글 Detail 가져오기
+    public ReviewResponseDto getReviewDetail(Long id){
+        ReviewResponseDto review = reviewService.getReview(id);
+
+        return review;
+    }
+
+
+
     /////////////////////////////////////////////////////////////////////////
 
 
@@ -130,7 +141,7 @@ public class AllController {
         return ResponseEntity.status(HttpStatus.OK).body(estimateTVResponseDto);
     }
 
-    //          견적신청-행사용품신청 API -> 관리자DB로 넘어간다
+    //          견적신청-행사용품신청 API -> 관리자DB로 넘어간다 ***************************
     @PostMapping(value = "/event/apply")
     public ResponseEntity<EstimateEventResponseDto> applyEvent(@RequestBody EstimateEventDto estimateEventDto) {
         EstimateEventResponseDto estimateEventResponseDto = estimateEventService.saveEstimateEventDto(estimateEventDto);
@@ -152,11 +163,26 @@ public class AllController {
 
     // 등록 API
 
-    @PostMapping(value = "register/product") // 상품등록하기
+    @PostMapping(value = "/register/product") //        상품등록하기
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto) {
         ProductResponseDto productResponseDto = productService.saveProductDto(productDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
+    }
+
+    @PutMapping(value = "/put/product") //              상품수정하기
+    public ResponseEntity<ProductResponseDto> putProduct(@RequestBody ProductDto productDto, Long id) {
+        ProductResponseDto productResponseDto = productService.putProduct(productDto, id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
+    }
+
+    @PostMapping(value = "/delete/product")         //  상품삭제하기
+    public ProductResponseDto dropProduct(Long id) {
+
+        ProductResponseDto productResponseDto = productService.deleteProduct(id);
+
+        return productResponseDto;
     }
 
     @PostMapping(value = "register/question") // 질문등록하기//////////////////////////////////////////////////////////
@@ -166,18 +192,74 @@ public class AllController {
         return ResponseEntity.status(HttpStatus.OK).body(questionResponseDto);
     }
 
-    @PostMapping(value = "register/member") // 회원 만들기
+    // 답변글 등록
+    @PostMapping(value = "register/question-answer") // 답변등록하기//////////////////////////////////////////////////////////
+    public ResponseEntity<QuestionAnswerResponseDto> createQuestionAnswer(@RequestBody QuestionAnswerDto questionAnswerDto) {
+        QuestionAnswerResponseDto questionAnswerResponseDto = questionAnswerService.saveQuestionAnswerDto(questionAnswerDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(questionAnswerResponseDto);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // 모든질문답변조회 (관리자용)
+    @GetMapping(value = "question-answer/view") // 모든 질문,답변 가져오기(관리자용)
+    public QAResult getQA() {
+        List<QuestionResponseDto> questionResponseDtos = questionService.getAllQuestion();
+        List<QuestionAnswerResponseDto> questionAnswerResponseDtos = questionAnswerService.getAllQuestionAnswer();
+        // 모든 질문, 답변 리스트로 쫙 가져오기
+
+        return new QAResult(questionResponseDtos, questionAnswerResponseDtos);
+    }
+
+    // 답변수정
+    @PutMapping(value = "/put/answer") //            답변 수정하기
+    public ResponseEntity<QuestionAnswerResponseDto> putQuestionAnswer(@RequestBody QuestionAnswerDto questionAnswerDto, Long id) {
+        QuestionAnswerResponseDto questionAnswerResponseDto = questionAnswerService.putQuestionAnswer(questionAnswerDto, id);
+        return ResponseEntity.status(HttpStatus.OK).body(questionAnswerResponseDto);
+    }
+
+    @DeleteMapping(value = "/delete/answer")//       답변 삭제하기
+    public boolean dropQuestionAnswer(Long id) {
+        questionAnswerService.deleteQuestionAnswer(id);
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @PostMapping(value = "register/member") //      회원 만들기 (회원가입)
     public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberDto memberDto) {
         MemberResponseDto memberResponseDto = memberService.saveMemberDto(memberDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(memberResponseDto);
     }
 
-    @PostMapping(value = "register/review") // 후기 등록하기
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @PostMapping(value = "register/review") //       후기 등록하기
     public ResponseEntity<ReviewResponseDto> createReview(@RequestBody ReviewDto reviewDto) {
         ReviewResponseDto reviewResponseDto = reviewService.saveReviewDto(reviewDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(reviewResponseDto);
+    }
+
+    @PutMapping(value = "/put/review") //            후기 수정하기
+    public ResponseEntity<ReviewResponseDto> putReview(@RequestBody ReviewDto reviewDto, Long id) {
+        ReviewResponseDto reviewResponseDto = reviewService.putReview(reviewDto, id);
+        return ResponseEntity.status(HttpStatus.OK).body(reviewResponseDto);
+    }
+
+    @DeleteMapping(value = "/delete/review")//       후기 삭제하기
+    public boolean dropReview(Long id) {
+        reviewService.deleteReview(id);
+        return true;
+    }
+
+    @GetMapping(value = "/review/all")   //         후기글 모든목록 가져오기 (관리자용)
+    public List<ReviewResponseDto> getAllReview(){
+        List<ReviewResponseDto> reviews = reviewService.getAllReview();
+
+        return reviews;
     }
 
 }

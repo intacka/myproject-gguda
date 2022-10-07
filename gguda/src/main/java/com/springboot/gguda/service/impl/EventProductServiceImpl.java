@@ -12,21 +12,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventProductServiceImpl implements EventProductService {
 
     private final EventProductRepository eventProductRepository;
-    private final EventQuestionRepository eventQuestionRepository;
     private final EventReviewRepository eventReviewRepository;
+    private final EventQuestionRepository eventQuestionRepository;
+    private final EventQuestionAnswerRepository eventQuestionAnswerRepository;
 
     @Autowired
     public EventProductServiceImpl(EventProductRepository eventProductRepository,
+                                   EventReviewRepository eventReviewRepository,
                                    EventQuestionRepository eventQuestionRepository,
-                                   EventReviewRepository eventReviewRepository) {
+                                   EventQuestionAnswerRepository eventQuestionAnswerRepository) {
         this.eventProductRepository = eventProductRepository;
-        this.eventQuestionRepository = eventQuestionRepository;
         this.eventReviewRepository = eventReviewRepository;
+        this.eventQuestionRepository = eventQuestionRepository;
+        this.eventQuestionAnswerRepository = eventQuestionAnswerRepository;
     }
 
 
@@ -167,5 +171,78 @@ public class EventProductServiceImpl implements EventProductService {
         return eventReviewResponseDtoList;
     }
 
+    @Override
+    public EventProductResponseDto putEventProduct(EventProductDto eventProductDto, Long id) {
+        EventProduct eventProduct = eventProductRepository.getById(id);
+
+        eventProduct.setName(eventProductDto.getName());
+        eventProduct.setSort(eventProductDto.getSort());
+        eventProduct.setSalesType(eventProductDto.getSalesType());
+
+        eventProductRepository.save(eventProduct);
+
+        EventProductResponseDto eventProductResponseDto = new EventProductResponseDto();
+        eventProductResponseDto.setId(eventProduct.getId());
+        eventProductResponseDto.setName(eventProduct.getName());
+        eventProductResponseDto.setSalesType(eventProduct.getSalesType());
+        eventProductResponseDto.setSort(eventProduct.getSort());
+        eventProductResponseDto.setCreatedAt(eventProduct.getCreatedAt());
+        eventProductResponseDto.setUpdatedAt(eventProduct.getUpdatedAt());
+
+        return eventProductResponseDto;
+    }
+
+    @Override
+    public EventProductResponseDto deleteEventProduct(Long id) {
+        Optional<EventProduct> optionalEventProduct = eventProductRepository.findById(id);
+        EventProduct eventProduct = optionalEventProduct.get();
+
+        eventProduct.setName(null);
+        eventProduct.setSalesType(null);
+        eventProduct.setSort(null);
+
+        eventProductRepository.save(eventProduct);
+
+        EventProductResponseDto eventProductResponseDto = new EventProductResponseDto();
+        eventProductResponseDto.setId(eventProduct.getId());
+        eventProductResponseDto.setSalesType(eventProduct.getSalesType());
+        eventProductResponseDto.setName(eventProduct.getName());
+        eventProductResponseDto.setSort(eventProduct.getSort());
+        eventProductResponseDto.setCreatedAt(eventProduct.getCreatedAt());
+        eventProductResponseDto.setUpdatedAt(eventProduct.getUpdatedAt());
+
+        return eventProductResponseDto;
+    }
+
+    @Override
+    public List<EventQuestionAnswerResponseDto> getEventQuestionAnswer(Long id) {
+        // 아이디에해당하는 질문답변리스트받기
+        List<EventQuestion> eventQuestions = eventQuestionRepository.findAllByEventProductIdOrderByCreatedAtDesc(id);
+
+        List<EventQuestionAnswerResponseDto> eventQuestionAnswerResponseDtoList = new ArrayList<>();
+
+        for(EventQuestion eventQuestion : eventQuestions){
+
+            Long eventQuestionIdTemp = eventQuestion.getId();
+            if (eventQuestionIdTemp != null) {
+                EventQuestionAnswer eventQuestionAnswer = eventQuestionAnswerRepository.getByEventQuestionId(eventQuestionIdTemp);
+
+                EventQuestionAnswerResponseDto dto = EventQuestionAnswerResponseDto.builder()
+                        .id(eventQuestionAnswer.getId())
+                        .content(eventQuestionAnswer.getContent())
+                        .privateWhether(eventQuestionAnswer.getPrivateWhether())
+                        .eventQuestionId(eventQuestionAnswer.getEventQuestion().getId())
+                        .createdAt(eventQuestionAnswer.getCreatedAt())
+                        .updatedAt(eventQuestionAnswer.getUpdatedAt())
+                        .build();
+
+                eventQuestionAnswerResponseDtoList.add(dto);
+            }
+        }
+
+        return eventQuestionAnswerResponseDtoList;
+    }
+
 
 }
+

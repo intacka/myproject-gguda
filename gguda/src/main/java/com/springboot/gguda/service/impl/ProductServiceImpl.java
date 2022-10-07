@@ -1,13 +1,12 @@
 package com.springboot.gguda.service.impl;
 
-import com.springboot.gguda.data.dto.ProductDto;
-import com.springboot.gguda.data.dto.ProductResponseDto;
-import com.springboot.gguda.data.dto.QuestionResponseDto;
-import com.springboot.gguda.data.dto.ReviewResponseDto;
+import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.entity.Question;
+import com.springboot.gguda.data.entity.QuestionAnswer;
 import com.springboot.gguda.data.entity.Review;
 import com.springboot.gguda.data.repository.ProductRepository;
+import com.springboot.gguda.data.repository.QuestionAnswerRepository;
 import com.springboot.gguda.data.repository.QuestionRepository;
 import com.springboot.gguda.data.repository.ReviewRepository;
 import com.springboot.gguda.service.ProductService;
@@ -17,21 +16,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final QuestionRepository questionRepository;
+    private final QuestionAnswerRepository questionAnswerRepository;
     private final ReviewRepository reviewRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
                               QuestionRepository questionRepository,
-                              ReviewRepository reviewRepository) {
+                              ReviewRepository reviewRepository,
+                              QuestionAnswerRepository questionAnswerRepository) {
         this.productRepository = productRepository;
         this.questionRepository = questionRepository;
         this.reviewRepository = reviewRepository;
+        this.questionAnswerRepository = questionAnswerRepository;
     }
 
 
@@ -192,6 +195,35 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<QuestionAnswerResponseDto> getQuestionAnswer(Long id) { // id는 productId이다
+        // 아이디에해당하는 질문답변리스트받기
+        List<Question> questions = questionRepository.findAllByProductIdOrderByCreatedAtDesc(id);
+
+        List<QuestionAnswerResponseDto> questionAnswerResponseDtoList = new ArrayList<>();
+
+        for(Question question : questions){
+
+            Long questionIdTemp = question.getId();
+            if (questionIdTemp != null) {
+                QuestionAnswer questionAnswer = questionAnswerRepository.getByQuestionId(questionIdTemp);
+
+                QuestionAnswerResponseDto dto = QuestionAnswerResponseDto.builder()
+                        .id(questionAnswer.getId())
+                        .content(questionAnswer.getContent())
+                        .privateWhether(questionAnswer.getPrivateWhether())
+                        .questionId(questionAnswer.getQuestion().getId())
+                        .createdAt(questionAnswer.getCreatedAt())
+                        .updatedAt(questionAnswer.getUpdatedAt())
+                        .build();
+
+                questionAnswerResponseDtoList.add(dto);
+            }
+        }
+
+        return questionAnswerResponseDtoList;
+    }
+
+    @Override
     public List<ReviewResponseDto> getReview(Long id) {
         List<Review> reviews = reviewRepository.findAllByProductIdOrderByCreatedAtDesc(id);
 
@@ -287,6 +319,61 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return productResponseDtoList;
+    }
+
+    @Override
+    public ProductResponseDto putProduct(ProductDto productDto, Long id) {
+        Product product = productRepository.getById(id);
+
+        product.setPrice(productDto.getPrice());
+        product.setName(productDto.getName());
+        product.setSales(productDto.getSales());
+        product.setBrand(productDto.getBrand());
+        product.setStock(productDto.getStock());
+        product.setSalesType(productDto.getSalesType());
+
+        productRepository.save(product);
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setPrice(product.getPrice());
+        productResponseDto.setCreatedAt(product.getCreatedAt());
+        productResponseDto.setUpdatedAt(product.getUpdatedAt());
+        productResponseDto.setName(product.getName());
+        productResponseDto.setSales(product.getSales());
+        productResponseDto.setBrand(product.getBrand());
+        productResponseDto.setStock(product.getStock());
+        productResponseDto.setSalesType(product.getSalesType());
+        productResponseDto.setId(product.getId());
+
+        return productResponseDto;
+    }
+
+    @Override
+    public ProductResponseDto deleteProduct(Long id) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        Product product = optionalProduct.get();
+
+        product.setBrand(null);
+        product.setStock(null);
+        product.setName(null);
+        product.setPrice(null);
+        product.setSales(null);
+        product.setSalesType(null);
+
+        productRepository.save(product);
+
+        ProductResponseDto productResponseDto = new ProductResponseDto();
+        productResponseDto.setPrice(product.getPrice());
+        productResponseDto.setCreatedAt(product.getCreatedAt());
+        productResponseDto.setUpdatedAt(product.getUpdatedAt());
+        productResponseDto.setName(product.getName());
+        productResponseDto.setSales(product.getSales());
+        productResponseDto.setBrand(product.getBrand());
+        productResponseDto.setStock(product.getStock());
+        productResponseDto.setSalesType(product.getSalesType());
+        productResponseDto.setId(product.getId());
+
+        return productResponseDto;
     }
 
 

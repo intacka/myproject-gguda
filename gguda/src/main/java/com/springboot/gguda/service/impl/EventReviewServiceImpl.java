@@ -102,5 +102,70 @@ public class EventReviewServiceImpl implements EventReviewService {
         return eventReviewResponseDtoList;
     }
 
+    @Override
+    public EventReviewResponseDto putEventReview(EventReviewDto eventReviewDto, Long id) {
+        EventReview eventReview = eventReviewRepository.getById(id);
+
+        eventReview.setContent(eventReviewDto.getContent());
+        eventReview.setStars(eventReviewDto.getStars());
+
+        eventReviewRepository.save(eventReview);
+
+        EventReviewResponseDto eventReviewResponseDto = new EventReviewResponseDto();
+        eventReviewResponseDto.setId(eventReview.getId());
+        eventReviewResponseDto.setContent(eventReview.getContent());
+        eventReviewResponseDto.setStars(eventReview.getStars());
+        eventReviewResponseDto.setEventProductId(eventReview.getEventProduct().getId());
+        eventReviewResponseDto.setMemberId(eventReview.getMember().getId());
+        eventReviewResponseDto.setCreatedAt(eventReview.getCreatedAt());
+        eventReviewResponseDto.setUpdatedAt(eventReview.getUpdatedAt());
+
+        return eventReviewResponseDto;
+    }
+
+    @Override
+    public void deleteEventReview(Long id) {
+        eventReviewRepository.deleteById(id);
+    }
+
+    @Override
+    public List<EventReviewResponseDto> getAllEventReview() {
+        List<EventReview> eventReviews = eventReviewRepository.findAllByOrderByCreatedAtDesc();
+
+        List<EventReviewResponseDto> eventReviewResponseDtoList = new ArrayList<>();
+
+        for(EventReview eventReview : eventReviews){
+            EventReviewResponseDto dto = EventReviewResponseDto.builder()
+                    .id(eventReview.getId())
+                    .content(eventReview.getContent())
+                    .stars(eventReview.getStars())
+                    .eventProductId(eventReview.getEventProduct().getId())
+                    .memberId(eventReview.getMember().getId())
+                    .createdAt(eventReview.getCreatedAt())
+                    .updatedAt(eventReview.getUpdatedAt())
+                    .build();
+
+            eventReviewResponseDtoList.add(dto);
+        }
+
+        return eventReviewResponseDtoList;
+    }
+
+    @Override
+    public EventReviewResponseDto getEventReview(Long id) {
+        EventReview eventReview = eventReviewRepository.getById(id);
+
+        EventReviewResponseDto eventReviewResponseDto = new EventReviewResponseDto();
+        eventReviewResponseDto.setId(eventReview.getId());
+        eventReviewResponseDto.setContent(eventReview.getContent());
+        eventReviewResponseDto.setStars(eventReview.getStars());
+        eventReviewResponseDto.setCreatedAt(eventReview.getCreatedAt());
+        eventReviewResponseDto.setUpdatedAt(eventReview.getUpdatedAt());
+        eventReviewResponseDto.setEventProductId(eventReview.getEventProduct().getId());
+        eventReviewResponseDto.setMemberId(eventReview.getMember().getId());
+
+        return eventReviewResponseDto;
+    }
+
 
 }

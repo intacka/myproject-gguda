@@ -18,4 +18,9 @@ public interface EventProductService {
 
     List<EventReviewResponseDto> getEventReview(Long id);
 
+    EventProductResponseDto putEventProduct(EventProductDto eventProductDto, Long id);
+
+    EventProductResponseDto deleteEventProduct(Long id);
+
+    List<EventQuestionAnswerResponseDto> getEventQuestionAnswer(Long id);
 }

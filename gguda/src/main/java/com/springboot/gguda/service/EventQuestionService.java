@@ -11,4 +11,6 @@ public interface EventQuestionService {
 
     EventQuestionResponseDto saveEventQuestionDto(EventQuestionDto eventQuestionDto);
     List<EventQuestionResponseDto> getEventQuestionList(Long id);
+
+    List<EventQuestionResponseDto> getAllEventQuestion();
 }

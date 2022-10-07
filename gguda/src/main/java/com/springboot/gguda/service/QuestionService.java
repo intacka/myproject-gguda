@@ -12,4 +12,5 @@ public interface QuestionService {
 
     List<QuestionResponseDto> getQuestionList(Long id);
 
+    List<QuestionResponseDto> getAllQuestion();
 }

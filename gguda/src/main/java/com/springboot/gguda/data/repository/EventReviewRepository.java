@@ -15,4 +15,6 @@ public interface EventReviewRepository extends JpaRepository<EventReview, Long> 
      Page<EventReview> findAllByContentContaining(String content, Pageable pageable);
 
      List<EventReview> findAllByMemberIdOrderByCreatedAtDesc(Long id);
+
+    List<EventReview> findAllByOrderByCreatedAtDesc();
 }
