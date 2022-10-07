@@ -86,26 +86,38 @@ public class BasketServiceImpl implements BasketService {
         return basketResultList;
     }
 
+    @Override
+    public Long getTotalPrice(Long memberId) {
+        List<Basket> baskets = basketRepository.findAllByMemberId(memberId);
 
-//    public List<ProductResponseDto> getBasketProductList(Long memberId) {
-//        List<Basket> baskets = basketRepository.findAllByMemberId(memberId);
-//
-//        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
-//
-//        for(Basket basket : baskets){
-//            Product product = productRepository.getById(basket.getProduct().getId());// productId 구했지.
-//            ProductResponseDto dto = ProductResponseDto.builder()
-//                    .id(product.getId())
-//                    .name(product.getName())
-//                    .price(product.getPrice())
-//                    .sales(product.getSales())
-//                    .stock(product.getStock())
-//                    .salesType(product.getSalesType())
-//                    .brand(product.getBrand())
-//                    .build();
-//            productResponseDtoList.add(dto);
-//        }
-//
-//        return productResponseDtoList;
-//    }
+        Long totalPrice = 0L;
+
+        for(Basket basket : baskets){
+            totalPrice += basket.getMedianPrice();
+        }
+
+        return totalPrice;
+    }
+
+    @Override
+    public BasketResponseDto putBasket(Long productId, Long memberId, Long amount) {
+        Basket basket = basketRepository.getByProductIdAndMemberId(productId, memberId);
+
+        basket.setAmount(amount);
+        basket.setMedianPrice(productRepository.getById(productId).getPrice()*amount);
+
+        basketRepository.save(basket);
+
+        BasketResponseDto basketResponseDto = new BasketResponseDto();
+        basketResponseDto.setId(basket.getId());
+        basketResponseDto.setAmount(basket.getAmount());
+        basketResponseDto.setCreatedAt(basket.getCreatedAt());
+        basketResponseDto.setUpdatedAt(basket.getUpdatedAt());
+        basketResponseDto.setProductId(basket.getProduct().getId());
+        basketResponseDto.setMemberId(basket.getMember().getId());
+        basketResponseDto.setMedianPrice(basket.getMedianPrice());
+
+
+        return basketResponseDto;
+    }
 }

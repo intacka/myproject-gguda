@@ -14,4 +14,8 @@ public interface BasketService {
     BasketResponseDto addInBasket(Long productId, Long memberId, Long amount);
 
     List<BasketResult> getBasketProductList(Long memberId);
+
+    Long getTotalPrice(Long memberId);
+
+    BasketResponseDto putBasket(Long productId, Long memberId, Long amount);
 }

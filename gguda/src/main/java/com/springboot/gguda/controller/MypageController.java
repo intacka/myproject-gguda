@@ -88,21 +88,21 @@ public class MypageController {
 
     }
 
-    @GetMapping(value = "memberInfo")             //회원정보 return API
+    @GetMapping(value = "/memberInfo")             //회원정보 return API
     public MemberResponseDto getMember(Long id) {
         MemberResponseDto myInfo = memberService.getMember(id);
 
         return myInfo;
     }
 
-    @GetMapping(value = "coupon")             // 회원MemberId(String)이 가지고있는 쿠폰조회 API
+    @GetMapping(value = "/coupon")             // 회원MemberId(String)이 가지고있는 쿠폰조회 API
     public List<CouponAdminResponseDto> getCouponList(String id) {
         List<CouponAdminResponseDto> couponAdminResponseDtos = couponAdminService.getCouponList(id);
 
         return couponAdminResponseDtos;
     }
 
-    @GetMapping(value = "myWriting")        // 회원id(memberId)로 후기질문들 찾기
+    @GetMapping(value = "/myWriting")        // 회원id(memberId)로 후기질문들 찾기
     public WritingResult getWritingList(Long id) {
         List<ReviewResponseDto> reviewResponseDtos = reviewService.getReviewList(id);
         List<EventReviewResponseDto> eventReviewResponseDtos = eventReviewService.getEventReviewList(id);
@@ -112,14 +112,14 @@ public class MypageController {
         return new WritingResult(reviewResponseDtos, eventReviewResponseDtos, questionResponseDtos, eventQuestionResponseDtos);
     }
 
-    @GetMapping(value = "OrderHistory")     // 회원id로 주문내역 return  API
+    @GetMapping(value = "/OrderHistory")     // 회원id로 주문내역 return  API
     public List<OrderHistoryResponseDto> getOrderHistoryList(Long id) {
         List<OrderHistoryResponseDto> orderHistoryResponseDtos = orderHistoryService.getOrderHistoryList(id);
 
         return orderHistoryResponseDtos;
     }
 
-    @PostMapping(value = "register/coupon/user") // 쿠폰등록하기(((((사용자용입니다))))) (일련번호로 등록하기)
+    @PostMapping(value = "/register/coupon/user") // 쿠폰등록하기(((((사용자용입니다))))) (일련번호로 등록하기)
     public CouponRegResult createCoupon(Long num, String memberId) {
         CouponAdminResponseDto couponAdminResponseDto = null;
         String state;
@@ -146,35 +146,49 @@ public class MypageController {
         return new CouponRegResult(N, state, couponAdminResponseDto);
     }
 
-    @PostMapping(value = "register/coupon/admin") // 쿠폰등록하기(((((관리자용입니다)))))
+    @PostMapping(value = "/register/coupon/admin") // 쿠폰등록하기(((((관리자용입니다)))))
     public ResponseEntity<CouponAdminResponseDto> createCoupon(@RequestBody CouponAdminDto couponAdminDto) {
         CouponAdminResponseDto couponAdminResponseDto = couponAdminService.saveCouponDto(couponAdminDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(couponAdminResponseDto);
     }
 
-    @PostMapping(value = "addtion/basket")                      // 장바구니에 추가하기
+    @PostMapping(value = "/addtion/basket")                      // 장바구니에 추가하기
     public ResponseEntity<BasketResponseDto> addProductInBasket(Long productId, Long memberId, Long amount) {
         BasketResponseDto basketResponseDto = basketService.addInBasket(productId, memberId, amount);
 
         return ResponseEntity.status(HttpStatus.OK).body(basketResponseDto);
     }
 
-    @GetMapping(value = "basket")               //   장바구니에 담긴 Product List return하기
+    @GetMapping(value = "/basket")               //   장바구니에 담긴 Product List return하기
     public List<BasketResult> getBasketProductList(Long memberId) {
         List<BasketResult> basketResultList = basketService.getBasketProductList(memberId);
 
         return basketResultList;
     }
 
-    @PostMapping(value = "addtion/event-basket")                      // 행사바구니에 행사용품 추가하기
+    // 일반상품 장바구니에 있는 총가격 return
+    @PostMapping(value="/basket/total-price")
+    public Long getTotalPrice(Long memberId) {
+        Long totalPrice = basketService.getTotalPrice(memberId);
+        return totalPrice;
+    }
+
+    @PutMapping(value="/basket/put")                // 장바구니 수량수정
+    public ResponseEntity<BasketResponseDto> putBasket(Long productId, Long memberId, Long amount) {
+        BasketResponseDto basketResponseDto = basketService.putBasket(productId, memberId, amount);
+
+        return ResponseEntity.status(HttpStatus.OK).body(basketResponseDto);
+    }
+
+    @PostMapping(value = "/addtion/event-basket")                      // 행사바구니에 행사용품 추가하기
     public ResponseEntity<EventBasketResponseDto> addEventProductInEventBasket(Long eventProductId, Long memberId, Long amount) {
         EventBasketResponseDto eventBasketResponseDto = eventBasketService.addInEventBasket(eventProductId, memberId, amount);
 
         return ResponseEntity.status(HttpStatus.OK).body(eventBasketResponseDto);
     }
 
-    @GetMapping(value = "event-basket")               //   행사바구니에 담긴 행사용품 List 나타내기
+    @GetMapping(value = "/event-basket")               //   행사바구니에 담긴 행사용품 List 나타내기
     public List<EventBasketResult> getEventBasketProductList(Long memberId) {
         List<EventBasketResult> eventBasketResultList = eventBasketService.getEventBasketEventProductList(memberId);
 
