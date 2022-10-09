@@ -15,4 +15,8 @@ public interface EventBasketService {
     EventBasketResponseDto addInEventBasket(Long eventProductId, Long memberId, Long amount);
 
     List<EventBasketResult> getEventBasketEventProductList(Long memberId);
+
+    EventBasketResponseDto putEventBasket(Long eventProductId, Long memberId, Long amount);
+
+    boolean deleteEventBasketEventProduct(Long id);
 }

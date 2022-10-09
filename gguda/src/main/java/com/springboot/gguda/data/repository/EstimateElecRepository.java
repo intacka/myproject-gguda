@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface EstimateElecRepository extends JpaRepository<EstimateElec, Long> {
     List<EstimateElec> findAll(Sort sort);
+
+    List<EstimateElec> findAllByMemberIdOrderByCreatedAtDesc(Long memberId);
 }

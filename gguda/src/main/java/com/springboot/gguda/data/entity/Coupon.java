@@ -3,7 +3,6 @@ package com.springboot.gguda.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Setter
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "coupon")
-public class CouponAdmin extends BaseEntity{
+public class Coupon extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +31,9 @@ public class CouponAdmin extends BaseEntity{
 
     @Column(name = "member_id")
     private String memberId;    // 회원id
+
+    @Column(name = "isUsed")
+    private Integer isUsed; // 사용 (미사용:0, 사용:1)
 
 
 

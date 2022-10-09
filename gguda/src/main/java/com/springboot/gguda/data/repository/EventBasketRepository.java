@@ -9,4 +9,6 @@ import java.util.List;
 public interface EventBasketRepository extends JpaRepository<EventBasket, Long> {
 
     List<EventBasket> findAllByMemberId(Long memberId);
+
+    EventBasket getByEventProductIdAndMemberId(Long eventProductId, Long memberId);
 }

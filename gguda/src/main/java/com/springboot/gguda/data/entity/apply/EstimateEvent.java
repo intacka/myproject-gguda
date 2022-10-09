@@ -1,10 +1,14 @@
 package com.springboot.gguda.data.entity.apply;
 
 import com.springboot.gguda.data.entity.BaseEntity;
+import com.springboot.gguda.data.entity.EventProduct;
 import com.springboot.gguda.data.entity.Member;
+import com.springboot.gguda.data.entity.Product;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -18,8 +22,8 @@ public class EstimateEvent extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "volumn")
-    private Integer volumn;             //수량
+    @Column(name = "etc_req")
+    private String etcReq;             // 기타요청사항
     @Column(columnDefinition = "TEXT", name = "link")
     private String link;         //링크
 
@@ -45,9 +49,15 @@ public class EstimateEvent extends BaseEntity {
     private String managerEmail;    // 담당자이메일
     @Column(name = "tax_email")
     private String taxEmail;        // 세금계산서이메일
+    @Column(name = "is_confirmed")
+    private Integer isConfirmed;        // 승인여부
 
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "list")
+    private List<EventProduct> eventProducts = new ArrayList<>();      // 상품목록
 
 }

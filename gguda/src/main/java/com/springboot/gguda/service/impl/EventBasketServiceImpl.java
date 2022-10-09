@@ -80,4 +80,29 @@ public class EventBasketServiceImpl implements EventBasketService {
 
         return eventBasketResultList;
     }
+
+    @Override
+    public EventBasketResponseDto putEventBasket(Long eventProductId, Long memberId, Long amount) {
+        EventBasket eventBasket = eventBasketRepository.getByEventProductIdAndMemberId(eventProductId, memberId);
+
+        eventBasket.setAmount(amount);
+        eventBasketRepository.save(eventBasket);
+
+        EventBasketResponseDto eventBasketResponseDto = new EventBasketResponseDto();
+        eventBasketResponseDto.setId(eventBasket.getId());
+        eventBasketResponseDto.setAmount(eventBasket.getAmount());
+        eventBasketResponseDto.setCreatedAt(eventBasket.getCreatedAt());
+        eventBasketResponseDto.setUpdatedAt(eventBasket.getUpdatedAt());
+        eventBasketResponseDto.setEventProductId(eventBasket.getEventProduct().getId());
+        eventBasketResponseDto.setMemberId(eventBasket.getMember().getId());
+
+
+        return eventBasketResponseDto;
+    }
+
+    @Override
+    public boolean deleteEventBasketEventProduct(Long id) {
+        eventBasketRepository.deleteById(id);
+        return true;
+    }
 }

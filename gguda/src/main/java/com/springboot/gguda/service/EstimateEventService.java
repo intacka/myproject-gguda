@@ -14,4 +14,6 @@ public interface EstimateEventService {
     List<EstimateEventResponseDto> getAllEstimateEvent();
 
     EstimateEventResponseDto getEstimateEvent(Long id);
+
+    EstimateEventResponseDto putEstimateEvent(Long id);
 }

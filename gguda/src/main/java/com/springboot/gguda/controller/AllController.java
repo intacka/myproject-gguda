@@ -2,8 +2,10 @@ package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.dto.apply.*;
+import com.springboot.gguda.data.repository.CouponRepository;
 import com.springboot.gguda.result.DetailResult;
 import com.springboot.gguda.result.MainResult;
+import com.springboot.gguda.result.PurchaseResult;
 import com.springboot.gguda.result.QAResult;
 import com.springboot.gguda.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,10 @@ public class AllController {
     private final EstimateTVService estimateTVService;
     private final EstimateEventService estimateEventService;
     private final ApplymentPartnersService applymentPartnersService;
+    private final ReserveHistoryService reserveHistoryService;
+    private final PurchaseService purchaseService;
+    private final BasketService basketService;
+    private final CouponRepository couponRepository;
 
     @Autowired
     public AllController(ProductService productService,
@@ -36,7 +42,11 @@ public class AllController {
                          ApplymentPartnersService applymentPartnersService,
                          EstimateEventService estimateEventService,
                          QuestionService questionService,
-                         QuestionAnswerService questionAnswerService) {
+                         QuestionAnswerService questionAnswerService,
+                         ReserveHistoryService reserveHistoryService,
+                         PurchaseService purchaseService,
+                         BasketService basketService,
+                         CouponRepository couponRepository) {
         this.productService = productService;
         this.questionService = questionService;
         this.questionAnswerService = questionAnswerService;
@@ -46,6 +56,10 @@ public class AllController {
         this.estimateTVService = estimateTVService;
         this.applymentPartnersService = applymentPartnersService;
         this.estimateEventService = estimateEventService;
+        this.reserveHistoryService = reserveHistoryService;
+        this.purchaseService = purchaseService;
+        this.basketService = basketService;
+        this.couponRepository = couponRepository;
     }
 
 
@@ -98,6 +112,12 @@ public class AllController {
         return brandProduct;
     }
 
+    @GetMapping(value = "/popular-notebook")
+    public List<ProductResponseDto> getPopularNotebook(){
+        List<ProductResponseDto> samsungNotebook10 = productService.getTop10Product("노트북");
+
+        return samsungNotebook10;
+    }
 
     //          후기글 return API
     @GetMapping(value = "/review") // 후기글 페이징처리해서 가져오기
@@ -227,9 +247,10 @@ public class AllController {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @PostMapping(value = "register/member") //      회원 만들기 (회원가입)
+    @PostMapping(value = "register/member") //      회원 만들기 (회원가입) + 적립금 1000원
     public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberDto memberDto) {
         MemberResponseDto memberResponseDto = memberService.saveMemberDto(memberDto);
+        reserveHistoryService.createSigninReserveHistory(memberResponseDto.getId()); // member적립금 1000원추가, 내역도 추가
 
         return ResponseEntity.status(HttpStatus.OK).body(memberResponseDto);
     }
@@ -239,6 +260,7 @@ public class AllController {
     @PostMapping(value = "register/review") //       후기 등록하기
     public ResponseEntity<ReviewResponseDto> createReview(@RequestBody ReviewDto reviewDto) {
         ReviewResponseDto reviewResponseDto = reviewService.saveReviewDto(reviewDto);
+        reserveHistoryService.createReviewReserveHistory(reviewResponseDto.getMemberId());      // 후기쓰면 50원 적립, 내역도 추가
 
         return ResponseEntity.status(HttpStatus.OK).body(reviewResponseDto);
     }
@@ -260,6 +282,31 @@ public class AllController {
         List<ReviewResponseDto> reviews = reviewService.getAllReview();
 
         return reviews;
+    }
+
+    // req: purchaseDto를 받아야한다.(여기에 매핑되어있는 배송정보까지)
+    // res: purchaseResponseDto를 반환해야한다, 그리고 장바구니List에서 삭제
+    @PostMapping(value = "/final-payment")  //  최종결제 API
+    public PurchaseResult createPurchase(@RequestBody PurchaseDto purchaseDto) { // 입력받는문제해결해야함
+        PurchaseResult purchaseResult = purchaseService.getPurchase(purchaseDto);
+        PurchaseResponseDto purchaseResponseDto = purchaseResult.getPurchaseResponseDto();
+
+        ////  장바구니에서 삭제하기
+        List<Long> pIds = purchaseResponseDto.getProductsId();
+        for(Long pId : pIds) {
+            basketService.deleteBasketProduct(pId);
+        }
+
+        //// 해당쿠폰을 사용상태로 변경
+        couponRepository.getById(purchaseResponseDto.getCouponId()).setIsUsed(1);
+
+        //// 적립금 내역추가, 적립금 변동 - 1%
+        Integer reservePrice = (int) (purchaseResponseDto.getTotalPrice() * 0.01); // 적립금액
+        reserveHistoryService.createPurchaseReserveHistory(reservePrice, purchaseResponseDto.getMemberId());
+
+        // 재고량도 변동해줘야한다
+
+        return purchaseResult;
     }
 
 }

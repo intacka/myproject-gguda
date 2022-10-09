@@ -31,13 +31,13 @@ public class Member extends BaseEntity{
     private Integer parterAutho; // 파트너스권한     NO:0 , YES:1
 
     @Column(name = "phone_num")
-    private Integer phoneNum; // 전화번호
+    private String phoneNum; // 전화번호
 
-    @Column(name = "address")
+    @Column(columnDefinition = "TEXT", name = "address")
     private String address; // 주소
 
     @Column(name = "gender")
-    private Integer gender; // 성별
+    private String gender; // 성별
 
     @Column(name = "date_of_birth")
     private Integer dateOfBirth; // 생년월일
@@ -48,7 +48,7 @@ public class Member extends BaseEntity{
     @Column(name = "reserves")
     private Integer reserves; // 적립금
 
-    @Column(name = "buisness_reg")
-    private Integer buisnessReg; // 사업자등록여부
+//    @Column(name = "buisness_reg")
+//    private Integer buisnessReg; // 사업자등록여부
 
 }

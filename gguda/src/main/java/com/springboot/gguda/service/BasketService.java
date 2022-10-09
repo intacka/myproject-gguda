@@ -1,12 +1,11 @@
 package com.springboot.gguda.service;
 
 import com.springboot.gguda.data.dto.BasketResponseDto;
-import com.springboot.gguda.data.dto.ProductResponseDto;
-import com.springboot.gguda.data.dto.ReviewDto;
-import com.springboot.gguda.data.dto.ReviewResponseDto;
+import com.springboot.gguda.data.entity.Basket;
 import com.springboot.gguda.result.BasketResult;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BasketService {
 
@@ -18,4 +17,6 @@ public interface BasketService {
     Long getTotalPrice(Long memberId);
 
     BasketResponseDto putBasket(Long productId, Long memberId, Long amount);
+
+    boolean deleteBasketProduct(Long id);
 }

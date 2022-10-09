@@ -32,6 +32,14 @@ public class MemberServiceImpl implements MemberService {
         Member member = new Member();
         member.setMemberId(memberDto.getMemberId());
         member.setMemberPw(memberDto.getMemberPw());
+        member.setEmail(memberDto.getEmail());
+        member.setParterAutho(memberDto.getParterAutho());
+        member.setPhoneNum(memberDto.getPhoneNum());
+        member.setAddress(memberDto.getAddress());
+        member.setGender(memberDto.getGender());
+        member.setDateOfBirth(memberDto.getDateOfBirth());
+        member.setMarketingConsent(memberDto.getMarketingConsent());
+        member.setReserves(0);
 
         memberRepository.save(member);
 
@@ -48,7 +56,6 @@ public class MemberServiceImpl implements MemberService {
         memberResponseDto.setDateOfBirth(member.getDateOfBirth());
         memberResponseDto.setMarketingConsent(member.getMarketingConsent());
         memberResponseDto.setReserves(member.getReserves());
-        memberResponseDto.setBuisnessReg(member.getBuisnessReg());
         memberResponseDto.setId(member.getId());
 
         return memberResponseDto;
@@ -72,7 +79,6 @@ public class MemberServiceImpl implements MemberService {
         memberResponseDto.setDateOfBirth(member.getDateOfBirth());
         memberResponseDto.setMarketingConsent(member.getMarketingConsent());
         memberResponseDto.setReserves(member.getReserves());
-        memberResponseDto.setBuisnessReg(member.getBuisnessReg());
 
         return memberResponseDto;
     }
@@ -96,7 +102,6 @@ public class MemberServiceImpl implements MemberService {
                     .dateOfBirth(member.getDateOfBirth())
                     .marketingConsent(member.getMarketingConsent())
                     .reserves(member.getReserves())
-                    .buisnessReg(member.getBuisnessReg())
                     .createdAt(member.getCreatedAt())
                     .updatedAt(member.getUpdatedAt())
                     .build();

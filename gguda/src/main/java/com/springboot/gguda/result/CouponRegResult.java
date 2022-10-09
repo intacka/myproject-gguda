@@ -1,18 +1,17 @@
 package com.springboot.gguda.result;
 
-import com.springboot.gguda.data.dto.CouponAdminResponseDto;
-import com.springboot.gguda.data.dto.MemberResponseDto;
+import com.springboot.gguda.data.dto.CouponResponseDto;
 import lombok.Data;
 
 @Data // Getter, Setter, ToString, EqualsAndHashCode
 public class CouponRegResult<T> {
     private int N;
     private String result;
-    private CouponAdminResponseDto couponAdminResponseDto;
+    private CouponResponseDto couponResponseDto;
 
-    public CouponRegResult(int N, String result, CouponAdminResponseDto couponAdminResponseDto) {
+    public CouponRegResult(int N, String result, CouponResponseDto couponResponseDto) {
         this.N = N;
         this.result = result;
-        this.couponAdminResponseDto = couponAdminResponseDto;
+        this.couponResponseDto = couponResponseDto;
     }
 }

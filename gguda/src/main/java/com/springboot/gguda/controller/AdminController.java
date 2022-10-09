@@ -10,10 +10,7 @@ import com.springboot.gguda.data.entity.Member;
 import com.springboot.gguda.data.repository.ApplymentPartnersRepository;
 import com.springboot.gguda.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,7 +49,7 @@ public class AdminController {
         return all;
     }
 
-    // 견적신청List확인(전자기기-TV)
+    // 견적신청List확인(TV)
 
     @GetMapping(value = "/estimate-tv")           //  신청목록 쭉 보기
     public List<EstimateTVResponseDto> getAllEstimateTV() {
@@ -64,7 +61,7 @@ public class AdminController {
     // 견적신청디테일보기 (전자기기)
 
     @GetMapping(value = "/estimate-elec/detail")
-    public EstimateElecResponseDto getEstimateElec(Long id) {
+    public EstimateElecResponseDto getEstimateElec(Long id) {           //전자기기견적서 고유id로 찾기
         EstimateElecResponseDto estimateElecResponseDto = estimateElecService.getEstimateElec(id);
 
         return estimateElecResponseDto;
@@ -73,14 +70,47 @@ public class AdminController {
     // 견적신청디테일보기 (TV)
 
     @GetMapping(value = "/estimate-tv/detail")
-    public EstimateTVResponseDto getEstimateTV(Long id) {
+    public EstimateTVResponseDto getEstimateTV(Long id) {             //전자기기견적서 고유id로 찾기
         EstimateTVResponseDto estimateTVResponseDto = estimateTVService.getEstimateTV(id);
 
         return estimateTVResponseDto;
     }
 
+    // 견적신청허가 (전자기기)
+    @PutMapping(value = "/estimate-elec/approval")
+    public EstimateElecResponseDto putEstimateElec(Long id) {
+        EstimateElecResponseDto estimateElecResponseDto = estimateElecService.putEstimateElec(id);
 
+        return estimateElecResponseDto;
+    }
 
+    // 견적신청허가 (TV)
+    @PutMapping(value = "/estimate-tv/approval")
+    public EstimateTVResponseDto putEstimateTV(Long id) {
+        EstimateTVResponseDto estimateTVResponseDto = estimateTVService.putEstimateTV(id);
+
+        return estimateTVResponseDto;
+    }
+
+    // 견적신청List확인(전자기기) - 사용자용
+
+    @GetMapping(value = "/estimate-elec/user")           //  신청목록 쭉 보기
+    public List<EstimateElecResponseDto> getAllEstimateElec(Long memberId) {
+        List<EstimateElecResponseDto> all = estimateElecService.getAllEstimateElecByMemberId(memberId);
+
+        return all;
+    }
+
+    // 견적신청List확인(TV) - 사용자용
+
+    @GetMapping(value = "/estimate-tv/user")           //  신청목록 쭉 보기
+    public List<EstimateTVResponseDto> getAllEstimateTV(Long memberId) {
+        List<EstimateTVResponseDto> all = estimateTVService.getAllEstimateTVByMemberId(memberId);
+
+        return all;
+    }
+
+//(행사용품)/////////////////////////////
 
     // 견적신청List확인(행사용품)
 
@@ -100,7 +130,13 @@ public class AdminController {
         return estimateEventResponseDto;
     }
 
-    // 견적신청허가(행사용품)
+    // 견적신청허가 (행사용품)
+    @PutMapping(value = "/estimate-event/approval")
+    public EstimateEventResponseDto putEstimateEvent(Long id) {
+        EstimateEventResponseDto estimateEventResponseDto = estimateEventService.putEstimateEvent(id);
+
+        return estimateEventResponseDto;
+    }
 
     // 파트너스신청확인
 

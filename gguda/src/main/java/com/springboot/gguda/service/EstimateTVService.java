@@ -12,4 +12,7 @@ public interface EstimateTVService {
 
     EstimateTVResponseDto getEstimateTV(Long id);
 
+    EstimateTVResponseDto putEstimateTV(Long id);
+
+    List<EstimateTVResponseDto> getAllEstimateTVByMemberId(Long memberId);
 }

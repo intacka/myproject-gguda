@@ -51,6 +51,8 @@ public class EstimateTV extends BaseEntity {
     private String managerEmail;    // 담당자이메일
     @Column(name = "tax_email")
     private String taxEmail;        // 세금계산서이메일
+    @Column(name = "is_confirmed")
+    private Integer isConfirmed;        // 승인여부
 
     @ManyToOne
     @JoinColumn(name = "member_id")

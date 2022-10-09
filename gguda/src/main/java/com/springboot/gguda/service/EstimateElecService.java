@@ -15,4 +15,8 @@ public interface EstimateElecService {
     List<EstimateElecResponseDto> getAllEstimateElec();
 
     EstimateElecResponseDto getEstimateElec(Long id);
+
+    EstimateElecResponseDto putEstimateElec(Long id);
+
+    List<EstimateElecResponseDto> getAllEstimateElecByMemberId(Long memberId);
 }

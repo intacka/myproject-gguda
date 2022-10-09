@@ -49,6 +49,7 @@ public class EstimateTVServiceImpl implements EstimateTVService {
         estimateTV.setManagerContact(estimateTVDto.getManagerContact());
         estimateTV.setManagerEmail(estimateTVDto.getManagerEmail());
         estimateTV.setTaxEmail(estimateTVDto.getTaxEmail());
+        estimateTV.setIsConfirmed(estimateTVDto.getIsConfirmed());
         estimateTV.setMember(memberRepository.findById(estimateTVDto.getMemberId()).get());
 
         estimateTVRepository.save(estimateTV);
@@ -71,6 +72,7 @@ public class EstimateTVServiceImpl implements EstimateTVService {
         estimateTVResponseDto.setManagerContact(estimateTV.getManagerContact());
         estimateTVResponseDto.setManagerEmail(estimateTV.getManagerEmail());
         estimateTVResponseDto.setTaxEmail(estimateTV.getTaxEmail());
+        estimateTVResponseDto.setIsConfirmed(estimateTV.getIsConfirmed());
         estimateTVResponseDto.setMemberId(estimateTV.getMember().getId());
         estimateTVResponseDto.setCreatedAt(estimateTV.getCreatedAt());
         estimateTVResponseDto.setUpdatedAt(estimateTV.getUpdatedAt());
@@ -103,6 +105,7 @@ public class EstimateTVServiceImpl implements EstimateTVService {
                     .managerContact(estimateTV.getManagerContact())
                     .managerEmail(estimateTV.getManagerEmail())
                     .taxEmail(estimateTV.getTaxEmail())
+                    .isConfirmed(estimateTV.getIsConfirmed())
                     .memberId(estimateTV.getMember().getId())
                     .createdAt(estimateTV.getCreatedAt())
                     .updatedAt(estimateTV.getUpdatedAt())
@@ -136,10 +139,81 @@ public class EstimateTVServiceImpl implements EstimateTVService {
         estimateTVResponseDto.setManagerContact(estimateTV.getManagerContact());
         estimateTVResponseDto.setManagerEmail(estimateTV.getManagerEmail());
         estimateTVResponseDto.setTaxEmail(estimateTV.getTaxEmail());
+        estimateTVResponseDto.setIsConfirmed(estimateTV.getIsConfirmed());
         estimateTVResponseDto.setMemberId(estimateTV.getMember().getId());
         estimateTVResponseDto.setCreatedAt(estimateTV.getCreatedAt());
         estimateTVResponseDto.setUpdatedAt(estimateTV.getUpdatedAt());
 
         return estimateTVResponseDto;
+    }
+
+    @Override
+    public EstimateTVResponseDto putEstimateTV(Long id) {
+        EstimateTV estimateTV = estimateTVRepository.getById(id);
+        estimateTV.setIsConfirmed(1);
+
+        estimateTVRepository.save(estimateTV);
+
+        EstimateTVResponseDto estimateTVResponseDto = new EstimateTVResponseDto();
+        estimateTVResponseDto.setId(estimateTV.getId());
+        estimateTVResponseDto.setVolumn(estimateTV.getVolumn());
+        estimateTVResponseDto.setTvSize(estimateTV.getTvSize());
+        estimateTVResponseDto.setInstallType(estimateTV.getInstallType());
+        estimateTVResponseDto.setConnectSort(estimateTV.getConnectSort());
+        estimateTVResponseDto.setLink(estimateTV.getLink());
+        estimateTVResponseDto.setEventContent(estimateTV.getEventContent());
+        estimateTVResponseDto.setPurpose(estimateTV.getPurpose());
+        estimateTVResponseDto.setInstallDate(estimateTV.getInstallDate());
+        estimateTVResponseDto.setCollectDate(estimateTV.getCollectDate());
+        estimateTVResponseDto.setAddress(estimateTV.getAddress());
+        estimateTVResponseDto.setInstallYn(estimateTV.getInstallYn());
+        estimateTVResponseDto.setElevatorYn(estimateTV.getElevatorYn());
+        estimateTVResponseDto.setManagerName(estimateTV.getManagerName());
+        estimateTVResponseDto.setManagerContact(estimateTV.getManagerContact());
+        estimateTVResponseDto.setManagerEmail(estimateTV.getManagerEmail());
+        estimateTVResponseDto.setTaxEmail(estimateTV.getTaxEmail());
+        estimateTVResponseDto.setIsConfirmed(estimateTV.getIsConfirmed());
+        estimateTVResponseDto.setMemberId(estimateTV.getMember().getId());
+        estimateTVResponseDto.setCreatedAt(estimateTV.getCreatedAt());
+        estimateTVResponseDto.setUpdatedAt(estimateTV.getUpdatedAt());
+
+        return estimateTVResponseDto;
+    }
+
+    @Override
+    public List<EstimateTVResponseDto> getAllEstimateTVByMemberId(Long memberId) {
+        List<EstimateTV> estimateTVs = estimateTVRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId);
+
+        List<EstimateTVResponseDto> estimateTVResponseDtoList = new ArrayList<>();
+
+        for(EstimateTV estimateTV : estimateTVs){ // 3
+            EstimateTVResponseDto dto = EstimateTVResponseDto.builder()
+                    .id(estimateTV.getId())
+                    .volumn(estimateTV.getVolumn())
+                    .tvSize(estimateTV.getTvSize())
+                    .installType(estimateTV.getInstallType())
+                    .connectSort(estimateTV.getConnectSort())
+                    .link(estimateTV.getLink())
+                    .eventContent(estimateTV.getEventContent())
+                    .purpose(estimateTV.getPurpose())
+                    .installDate(estimateTV.getInstallDate())
+                    .collectDate(estimateTV.getCollectDate())
+                    .address(estimateTV.getAddress())
+                    .installYn(estimateTV.getInstallYn())
+                    .elevatorYn(estimateTV.getElevatorYn())
+                    .managerName(estimateTV.getManagerName())
+                    .managerContact(estimateTV.getManagerContact())
+                    .managerEmail(estimateTV.getManagerEmail())
+                    .taxEmail(estimateTV.getTaxEmail())
+                    .isConfirmed(estimateTV.getIsConfirmed())
+                    .memberId(estimateTV.getMember().getId())
+                    .createdAt(estimateTV.getCreatedAt())
+                    .updatedAt(estimateTV.getUpdatedAt())
+                    .build();
+
+            estimateTVResponseDtoList.add(dto);
+        }
+
+        return estimateTVResponseDtoList;
     }
 }

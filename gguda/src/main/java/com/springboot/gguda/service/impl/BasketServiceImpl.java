@@ -2,7 +2,6 @@ package com.springboot.gguda.service.impl;
 
 import com.springboot.gguda.data.dto.BasketResponseDto;
 import com.springboot.gguda.data.dto.ProductResponseDto;
-import com.springboot.gguda.data.dto.QuestionResponseDto;
 import com.springboot.gguda.data.entity.Basket;
 import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.repository.BasketRepository;
@@ -119,5 +118,12 @@ public class BasketServiceImpl implements BasketService {
 
 
         return basketResponseDto;
+    }
+
+    @Override
+    public boolean deleteBasketProduct(Long id) {
+        basketRepository.deleteById(id);
+
+        return true;
     }
 }

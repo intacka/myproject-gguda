@@ -2,7 +2,6 @@ package com.springboot.gguda.data.dto;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -11,14 +10,14 @@ import java.time.LocalDateTime;
 @ToString
 @Setter
 @Getter
-public class CouponAdminResponseDto {
+public class ShippingInfoResponseDto {
 
     private Long id;
-    private Long num;       // 쿠폰 일련번호
-    private String name;    // 쿠폰 이름
-    private Double rate;    // 할인율
-    private String exPeriod; // 유효기간
-    private String memberId;          // 평점
+    private String name;
+    private String address;
+    private String phoneNum; // 전화번호
+    private String req; // 요청사항
+    private Long purchaseId;
     private LocalDateTime createdAt; // 등록날짜
     private LocalDateTime updatedAt; // 수정날짜
 
