@@ -124,6 +124,8 @@ public class BasketServiceImpl implements BasketService {
     public boolean deleteBasketProduct(Long id) {
         basketRepository.deleteById(id);
 
+        basketRepository.deleteByProductId(id);
+
         return true;
     }
 }

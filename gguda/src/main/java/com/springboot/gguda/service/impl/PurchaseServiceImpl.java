@@ -1,10 +1,7 @@
 package com.springboot.gguda.service.impl;
 
 import com.springboot.gguda.data.dto.*;
-import com.springboot.gguda.data.entity.Member;
-import com.springboot.gguda.data.entity.Product;
-import com.springboot.gguda.data.entity.Purchase;
-import com.springboot.gguda.data.entity.ShippingInfo;
+import com.springboot.gguda.data.entity.*;
 import com.springboot.gguda.data.repository.*;
 import com.springboot.gguda.result.PurchaseResult;
 import com.springboot.gguda.service.PurchaseService;
@@ -23,6 +20,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
     private final ShippingInfoRepository shippingInfoRepository;
+    private final PurchaseProductInfoRepository purchaseProductInfoRepository;
 
     @Autowired
     public PurchaseServiceImpl(PurchaseRepository purchaseRepository,
@@ -30,13 +28,15 @@ public class PurchaseServiceImpl implements PurchaseService {
                                ReserveHistoryRepository reserveHistoryRepository,
                                MemberRepository memberRepository,
                                ProductRepository productRepository,
-                               ShippingInfoRepository shippingInfoRepository) {
+                               ShippingInfoRepository shippingInfoRepository,
+                               PurchaseProductInfoRepository purchaseProductInfoRepository) {
         this.purchaseRepository = purchaseRepository;
         this.couponRepository = couponRepository;
         this.reserveHistoryRepository = reserveHistoryRepository;
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
         this.shippingInfoRepository = shippingInfoRepository;
+        this.purchaseProductInfoRepository = purchaseProductInfoRepository;
     }
 
 
@@ -46,19 +46,26 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchase.setHowPay(purchaseDto.getHowPay());
         purchase.setCouponId(purchaseDto.getCouponId());
         purchase.setUseReserve(purchaseDto.getUseReserve());
+        purchase.setState(purchaseDto.getState());
         purchase.setTotalPrice(purchaseDto.getTotalPrice());
-        ////////// product담기
-        List<Long> pIds = purchaseDto.getProductsId();
-        List<Product> products = new ArrayList<>();
-        for(Long pId:pIds) {
-            Product product = productRepository.getById(pId);
-            products.add(product);
+        //////////
+        List<PurchaseProductInfo> pPinfos = new ArrayList<>();
+        List<PurchaseProductInfoDto> pPinfoDtos = purchaseDto.getPurchaseProductInfoDtos();
+        for (PurchaseProductInfoDto pPinfoDto : pPinfoDtos) {
+            PurchaseProductInfo purchaseProductInfo = new PurchaseProductInfo();
+
+            purchaseProductInfo.setProductId(pPinfoDto.getProductId());
+            purchaseProductInfo.setAmount(pPinfoDto.getAmount());
+            purchaseProductInfoRepository.save(purchaseProductInfo);
+            System.out.println(purchaseProductInfo);// amount가 자꾸 null값으로 들어옴
+            pPinfos.add(purchaseProductInfo);
         }
-        purchase.setProducts(products);
+
+        purchase.setPurchaseProductInfos(pPinfos);
         ///////////
         purchase.setMember(memberRepository.getById(purchaseDto.getMemberId()));
 
-        purchaseRepository.save(purchase);
+        purchaseRepository.save(purchase);//////////////////오류지점
 
         ShippingInfo shippingInfo = new ShippingInfo();
         shippingInfo.setName(purchaseDto.getName());
@@ -76,7 +83,16 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseResponseDto.setTotalPrice(purchase.getTotalPrice());
         purchaseResponseDto.setState(purchase.getState());
         purchaseResponseDto.setMemberId(purchase.getMember().getId());
-        purchaseResponseDto.setProductsId(pIds);
+
+        List<PurchaseProductInfoResponseDto> pPinfoResponseDtos = new ArrayList<>();
+        for (PurchaseProductInfo pPinfo : pPinfos) {
+            PurchaseProductInfoResponseDto purchaseProductInfoResponseDto = new PurchaseProductInfoResponseDto();
+            purchaseProductInfoResponseDto.setProductId(pPinfo.getProductId());
+            purchaseProductInfoResponseDto.setAmount(pPinfo.getAmount());
+            pPinfoResponseDtos.add(purchaseProductInfoResponseDto);
+        }
+        purchaseResponseDto.setPurchaseProductInfoResponseDtos(pPinfoResponseDtos);
+
         purchaseResponseDto.setCreatedAt(purchase.getCreatedAt());
         purchaseResponseDto.setUpdatedAt(purchase.getUpdatedAt());
 
@@ -111,13 +127,16 @@ public class PurchaseServiceImpl implements PurchaseService {
             purchaseResponseDto.setTotalPrice(purchase.getTotalPrice());
             purchaseResponseDto.setState(purchase.getState());
             purchaseResponseDto.setMemberId(purchase.getMember().getId());
-            ////////// productIds 생성하고 세팅하기
-            List<Product> products = purchase.getProducts();
-            List<Long> productIds = new ArrayList<>();
-                for(Product product:products) {
-                    productIds.add(product.getId());
-                }
-            purchaseResponseDto.setProductsId(productIds);
+            //////////
+            List<PurchaseProductInfo> pPinfos = purchase.getPurchaseProductInfos();
+            List<PurchaseProductInfoResponseDto> pPinfoResponseDtos = new ArrayList<>();
+            for (PurchaseProductInfo pPinfo : pPinfos) {
+                PurchaseProductInfoResponseDto purchaseProductInfoResponseDto = new PurchaseProductInfoResponseDto();
+                purchaseProductInfoResponseDto.setProductId(pPinfo.getProductId());
+                purchaseProductInfoResponseDto.setAmount(pPinfo.getAmount());
+                pPinfoResponseDtos.add(purchaseProductInfoResponseDto);
+            }
+            purchaseResponseDto.setPurchaseProductInfoResponseDtos(pPinfoResponseDtos);
             ///////////
             purchaseResponseDto.setCreatedAt(purchase.getCreatedAt());
             purchaseResponseDto.setUpdatedAt(purchase.getUpdatedAt());
@@ -152,12 +171,15 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseResponseDto.setState(purchase.getState());
         purchaseResponseDto.setMemberId(purchase.getMember().getId());
         ////////// productIds 생성하고 세팅하기
-        List<Product> products = purchase.getProducts();
-        List<Long> productIds = new ArrayList<>();
-        for(Product product:products) {
-            productIds.add(product.getId());
+        List<PurchaseProductInfo> pPinfos = purchase.getPurchaseProductInfos();
+        List<PurchaseProductInfoResponseDto> pPinfoResponseDtos = new ArrayList<>();
+        for (PurchaseProductInfo pPinfo : pPinfos) {
+            PurchaseProductInfoResponseDto purchaseProductInfoResponseDto = new PurchaseProductInfoResponseDto();
+            purchaseProductInfoResponseDto.setProductId(pPinfo.getProductId());
+            purchaseProductInfoResponseDto.setAmount(pPinfo.getAmount());
+            pPinfoResponseDtos.add(purchaseProductInfoResponseDto);
         }
-        purchaseResponseDto.setProductsId(productIds);
+        purchaseResponseDto.setPurchaseProductInfoResponseDtos(pPinfoResponseDtos);
         ///////////
         purchaseResponseDto.setCreatedAt(purchase.getCreatedAt());
         purchaseResponseDto.setUpdatedAt(purchase.getUpdatedAt());

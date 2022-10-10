@@ -34,4 +34,5 @@ public interface ProductService {
 
     ProductResponseDto deleteProduct(Long id);
 
+    void putStock(Long productId, Integer amount);
 }

@@ -1,5 +1,6 @@
 package com.springboot.gguda.data.dto;
 
+import com.springboot.gguda.data.entity.PurchaseProductInfo;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,8 @@ public class PurchaseResponseDto {
     private Long totalPrice;        // 최종결제금액
     private String state;       // 상태(결제완료,배송중,배송완료)
 
-    private List<Long> productsId;      // 상품목록
+    private List<PurchaseProductInfoResponseDto> purchaseProductInfoResponseDtos;
+    // 상품과수량 목록
 
     private Long memberId;
 

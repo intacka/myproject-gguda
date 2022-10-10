@@ -2,6 +2,7 @@ package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.dto.apply.*;
+import com.springboot.gguda.data.entity.PurchaseProductInfo;
 import com.springboot.gguda.data.repository.CouponRepository;
 import com.springboot.gguda.result.DetailResult;
 import com.springboot.gguda.result.MainResult;
@@ -292,19 +293,25 @@ public class AllController {
         PurchaseResponseDto purchaseResponseDto = purchaseResult.getPurchaseResponseDto();
 
         ////  장바구니에서 삭제하기
-        List<Long> pIds = purchaseResponseDto.getProductsId();
-        for(Long pId : pIds) {
-            basketService.deleteBasketProduct(pId);
+        List<PurchaseProductInfoResponseDto> pPinfoResponseDtos = purchaseResponseDto.getPurchaseProductInfoResponseDtos();
+        for(PurchaseProductInfoResponseDto pPinfoResponseDto : pPinfoResponseDtos) {
+            basketService.deleteBasketProduct((long)pPinfoResponseDto.getProductId());  // 장바구니 삭제
+
+            Long productId = (long)pPinfoResponseDto.getProductId();
+            Integer amount = pPinfoResponseDto.getAmount();
+            productService.putStock(productId, amount);                 // 재고량 변동
         }
+        // 주문목록은 이미 Purchase에 member로 연관관계매핑이 되어있다. 그러므로 주문목록에는 자동으로 추가가된것이다
 
         //// 해당쿠폰을 사용상태로 변경
-        couponRepository.getById(purchaseResponseDto.getCouponId()).setIsUsed(1);
+        if (purchaseResponseDto.getCouponId() != null &&
+                couponRepository.getById(purchaseResponseDto.getCouponId()).getIsUsed() == 0) {
+            couponRepository.getById(purchaseResponseDto.getCouponId()).setIsUsed(1);
+        }
 
         //// 적립금 내역추가, 적립금 변동 - 1%
         Integer reservePrice = (int) (purchaseResponseDto.getTotalPrice() * 0.01); // 적립금액
         reserveHistoryService.createPurchaseReserveHistory(reservePrice, purchaseResponseDto.getMemberId());
-
-        // 재고량도 변동해줘야한다
 
         return purchaseResult;
     }

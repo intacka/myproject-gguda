@@ -376,5 +376,12 @@ public class ProductServiceImpl implements ProductService {
         return productResponseDto;
     }
 
+    @Override
+    public void putStock(Long productId, Integer amount) {
+        Product thisProduct = productRepository.getById(productId);
+        Integer originalStock = thisProduct.getStock();
+        thisProduct.setStock(originalStock - amount);
+    }
+
 
 }

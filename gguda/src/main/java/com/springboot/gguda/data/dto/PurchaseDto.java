@@ -1,12 +1,9 @@
 package com.springboot.gguda.data.dto;
 
-import com.springboot.gguda.data.entity.Member;
-import com.springboot.gguda.data.entity.Product;
-import com.springboot.gguda.data.entity.ShippingInfo;
+import com.springboot.gguda.data.entity.PurchaseProductInfo;
 import lombok.*;
 
-import javax.persistence.*;
-import java.util.ArrayList;
+import javax.persistence.Column;
 import java.util.List;
 
 @Data
@@ -22,7 +19,7 @@ public class PurchaseDto {
     private Long totalPrice;        // 최종결제금액
     private String state;       // 상태(결제완료,배송중,배송완료)
 
-    private List<Long> productsId;      // 상품목록
+    private List<PurchaseProductInfoDto> purchaseProductInfoDtos;      // 상품목록
 
 //    private Long shippingInfoId;      // 배송정보(엔티티)
     private String name;        // 주문자이름

@@ -25,8 +25,8 @@ public class Purchase extends BaseEntity {
     private String state;       // 상태(결제완료,배송중,배송완료)
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "list")
-    private List<Product> products = new ArrayList<>();      // 상품목록
+    @JoinColumn(name = "purchase_product_infos")
+    private List<PurchaseProductInfo> purchaseProductInfos = new ArrayList<>();      // 상품목록
 
     @ManyToOne
     @JoinColumn(name = "member_id")
