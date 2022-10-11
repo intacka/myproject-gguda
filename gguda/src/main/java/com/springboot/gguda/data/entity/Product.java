@@ -3,7 +3,6 @@ package com.springboot.gguda.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Setter
@@ -24,14 +23,14 @@ public class Product extends BaseEntity{
     @Column(name = "price")
     private Integer price; // 상품가격
 
-    @Column(name = "sales")
-    private Integer sales; // 판매량
+    @Column(name = "sales_amount")
+    private Integer salesAmount; // 판매량
 
     @Column(name = "stock")
     private Integer stock; // 재고량
 
-    @Column(name = "sales_type")
-    private Integer salesType; // 판매타입
+    @Column(name = "sales_state")
+    private Integer salesState; // 판매타입 (0:판매중 , 1:품절)
 
     @Column(name = "brand")
     private String brand; // 브랜드

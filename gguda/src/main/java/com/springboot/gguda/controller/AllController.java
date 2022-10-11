@@ -318,7 +318,7 @@ public class AllController {
 
             Long productId = (long)pPinfoResponseDto.getProductId();
             Integer amount = pPinfoResponseDto.getAmount();
-            productService.putStock(productId, amount);                 // 재고량 변동
+            productService.putStock(productId, amount);                 // 재고량 변동(재고0이면 품절로 전환), 판매량증가
         }
         // 주문목록은 이미 Purchase에 member로 연관관계매핑이 되어있다. 그러므로 주문목록에는 자동으로 추가가된것이다
 
@@ -339,7 +339,7 @@ public class AllController {
     @PostMapping(value = "/rental-payment")
     public RentalResponseDto createRental(@RequestBody RentalDto rentalDto) {
         RentalResponseDto rentalResponseDto = rentalService.createRental(rentalDto);
-
+        productService.putState(rentalDto.getProductId()); // 재고변동,판매량증가,품절이면 상태전환
         return rentalResponseDto;
     }
 

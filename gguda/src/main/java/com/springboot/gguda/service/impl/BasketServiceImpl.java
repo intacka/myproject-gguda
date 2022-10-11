@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BasketServiceImpl implements BasketService {
@@ -69,9 +68,9 @@ public class BasketServiceImpl implements BasketService {
                     .id(product.getId())
                     .name(product.getName())
                     .price(product.getPrice())
-                    .sales(product.getSales())
+                    .sales(product.getSalesAmount())
                     .stock(product.getStock())
-                    .salesType(product.getSalesType())
+                    .salesType(product.getSalesState())
                     .brand(product.getBrand())
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
