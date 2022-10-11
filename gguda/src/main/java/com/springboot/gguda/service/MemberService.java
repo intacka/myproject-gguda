@@ -10,4 +10,8 @@ public interface MemberService {
     MemberResponseDto getMember(Long id);
 
     List<MemberResponseDto> getMemberList();
+
+    boolean login(String memberId, String memberPw);
+
+    boolean doubleCheck(String memberId);
 }

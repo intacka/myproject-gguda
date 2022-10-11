@@ -48,6 +48,9 @@ public class Member extends BaseEntity{
     @Column(name = "reserves")
     private Integer reserves; // 적립금
 
+    @Column(name = "name")
+    private String name;    // 이름
+
 //    @Column(name = "buisness_reg")
 //    private Integer buisnessReg; // 사업자등록여부
 

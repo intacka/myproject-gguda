@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -40,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
         member.setDateOfBirth(memberDto.getDateOfBirth());
         member.setMarketingConsent(memberDto.getMarketingConsent());
         member.setReserves(0);
+        member.setName(memberDto.getName());
 
         memberRepository.save(member);
 
@@ -57,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
         memberResponseDto.setMarketingConsent(member.getMarketingConsent());
         memberResponseDto.setReserves(member.getReserves());
         memberResponseDto.setId(member.getId());
+        memberResponseDto.setName(member.getName());
 
         return memberResponseDto;
     }
@@ -79,6 +82,7 @@ public class MemberServiceImpl implements MemberService {
         memberResponseDto.setDateOfBirth(member.getDateOfBirth());
         memberResponseDto.setMarketingConsent(member.getMarketingConsent());
         memberResponseDto.setReserves(member.getReserves());
+        memberResponseDto.setName(member.getName());
 
         return memberResponseDto;
     }
@@ -102,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
                     .dateOfBirth(member.getDateOfBirth())
                     .marketingConsent(member.getMarketingConsent())
                     .reserves(member.getReserves())
+                    .name(member.getName())
                     .createdAt(member.getCreatedAt())
                     .updatedAt(member.getUpdatedAt())
                     .build();
@@ -110,6 +115,34 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return memberResponseDtoList;
+    }
+
+    @Override
+    public boolean login(String memberId, String memberPw) {
+
+        Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
+
+        if (optionalMember.isPresent()) {
+            if (optionalMember.get().getMemberPw().equals(memberPw)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean doubleCheck(String memberId) {
+        Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
+
+        if (optionalMember.isPresent()) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
 }

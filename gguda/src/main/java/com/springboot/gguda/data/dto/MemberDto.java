@@ -24,6 +24,7 @@ public class MemberDto {
     private Integer dateOfBirth; // 생년월일
     private Integer marketingConsent; // 마케팅정보수신동의여부
     private Integer reserves; // 적립금
+    private String name;
 //    private Integer buisnessReg; // 사업자등록여부
 
 }

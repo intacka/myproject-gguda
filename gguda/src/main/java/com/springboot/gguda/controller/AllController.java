@@ -285,6 +285,20 @@ public class AllController {
         return reviews;
     }
 
+    @PostMapping(value = "/login")              // Login API
+    public  boolean login(String memberId, String memberPw) {
+        boolean result = memberService.login(memberId, memberPw);
+        return result;
+    }
+
+    @PostMapping(value = "/double-check")       // 회원가입할때 아이디 중복확인
+    public boolean doubleCheck(String memberId) {
+        boolean result = memberService.doubleCheck(memberId);
+        return result;
+    }
+
+
+
     // req: purchaseDto를 받아야한다.(여기에 매핑되어있는 배송정보까지)
     // res: purchaseResponseDto를 반환해야한다, 그리고 장바구니List에서 삭제
     @PostMapping(value = "/final-payment")  //  최종결제 API

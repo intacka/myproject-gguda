@@ -1,7 +1,6 @@
 package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.MemberResponseDto;
-import com.springboot.gguda.data.dto.ReviewResponseDto;
 import com.springboot.gguda.data.dto.apply.ApplymentPartnersResponseDto;
 import com.springboot.gguda.data.dto.apply.EstimateElecResponseDto;
 import com.springboot.gguda.data.dto.apply.EstimateEventResponseDto;
@@ -10,7 +9,10 @@ import com.springboot.gguda.data.entity.Member;
 import com.springboot.gguda.data.repository.ApplymentPartnersRepository;
 import com.springboot.gguda.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
