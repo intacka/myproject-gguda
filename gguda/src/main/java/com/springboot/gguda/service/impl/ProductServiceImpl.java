@@ -53,9 +53,9 @@ public class ProductServiceImpl implements ProductService {
                     .price(product.getPrice())
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
-                    .sales(product.getSalesAmount())
+                    .sales(product.getSales())
                     .brand(product.getBrand())
-                    .salesType(product.getSalesState())
+                    .salesType(product.getSalesType())
                     .stock(product.getStock())
                     .build();
 
@@ -79,9 +79,9 @@ public class ProductServiceImpl implements ProductService {
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
                     .price(product.getPrice())
-                    .sales(product.getSalesAmount())
+                    .sales(product.getSales())
                     .brand(product.getBrand())
-                    .salesType(product.getSalesState())
+                    .salesType(product.getSalesType())
                     .stock(product.getStock())
                     .build();
 
@@ -105,9 +105,9 @@ public class ProductServiceImpl implements ProductService {
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
                     .price(product.getPrice())
-                    .sales(product.getSalesAmount())
+                    .sales(product.getSales())
                     .brand(product.getBrand())
-                    .salesType(product.getSalesState())
+                    .salesType(product.getSalesType())
                     .stock(product.getStock())
                     .build();
 
@@ -127,10 +127,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setPrice(productDto.getPrice());
         product.setName(productDto.getName());
-        product.setSalesAmount(productDto.getSales());
+        product.setSales(productDto.getSales());
         product.setBrand(productDto.getBrand());
         product.setStock(productDto.getStock());
-        product.setSalesState(productDto.getSalesType());
+        product.setSalesType(productDto.getSalesType());
 
         productRepository.save(product);
 
@@ -139,10 +139,10 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setCreatedAt(product.getCreatedAt());
         productResponseDto.setUpdatedAt(product.getUpdatedAt());
         productResponseDto.setName(product.getName());
-        productResponseDto.setSales(product.getSalesAmount());
+        productResponseDto.setSales(product.getSales());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
-        productResponseDto.setSalesType(product.getSalesState());
+        productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
 
         return productResponseDto;
@@ -158,10 +158,10 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setCreatedAt(product.getCreatedAt());
         productResponseDto.setUpdatedAt(product.getUpdatedAt());
         productResponseDto.setName(product.getName());
-        productResponseDto.setSales(product.getSalesAmount());
+        productResponseDto.setSales(product.getSales());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
-        productResponseDto.setSalesType(product.getSalesState());
+        productResponseDto.setSalesType(product.getSalesType());
 
 
         return productResponseDto;
@@ -259,9 +259,9 @@ public class ProductServiceImpl implements ProductService {
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
                     .price(product.getPrice())
-                    .sales(product.getSalesAmount())
+                    .sales(product.getSales())
                     .brand(product.getBrand())
-                    .salesType(product.getSalesState())
+                    .salesType(product.getSalesType())
                     .stock(product.getStock())
                     .build();
 
@@ -284,10 +284,10 @@ public class ProductServiceImpl implements ProductService {
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
                     .name(product.getName())
-                    .sales(product.getSalesAmount())
+                    .sales(product.getSales())
                     .brand(product.getBrand())
                     .stock(product.getStock())
-                    .salesType(product.getSalesState())
+                    .salesType(product.getSalesType())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -309,10 +309,10 @@ public class ProductServiceImpl implements ProductService {
                     .createdAt(product.getCreatedAt())
                     .updatedAt(product.getUpdatedAt())
                     .name(product.getName())
-                    .sales(product.getSalesAmount())
+                    .sales(product.getSales())
                     .brand(product.getBrand())
                     .stock(product.getStock())
-                    .salesType(product.getSalesState())
+                    .salesType(product.getSalesType())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -327,10 +327,10 @@ public class ProductServiceImpl implements ProductService {
 
         product.setPrice(productDto.getPrice());
         product.setName(productDto.getName());
-        product.setSalesAmount(productDto.getSales());
+        product.setSales(productDto.getSales());
         product.setBrand(productDto.getBrand());
         product.setStock(productDto.getStock());
-        product.setSalesState(productDto.getSalesType());
+        product.setSalesType(productDto.getSalesType());
 
         productRepository.save(product);
 
@@ -339,10 +339,10 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setCreatedAt(product.getCreatedAt());
         productResponseDto.setUpdatedAt(product.getUpdatedAt());
         productResponseDto.setName(product.getName());
-        productResponseDto.setSales(product.getSalesAmount());
+        productResponseDto.setSales(product.getSales());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
-        productResponseDto.setSalesType(product.getSalesState());
+        productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
 
         return productResponseDto;
@@ -357,8 +357,8 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(null);
         product.setName(null);
         product.setPrice(null);
-        product.setSalesAmount(null);
-        product.setSalesState(null);
+        product.setSales(null);
+        product.setSalesType(null);
 
         productRepository.save(product);
 
@@ -367,10 +367,10 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setCreatedAt(product.getCreatedAt());
         productResponseDto.setUpdatedAt(product.getUpdatedAt());
         productResponseDto.setName(product.getName());
-        productResponseDto.setSales(product.getSalesAmount());
+        productResponseDto.setSales(product.getSales());
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
-        productResponseDto.setSalesType(product.getSalesState());
+        productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
 
         return productResponseDto;
@@ -381,10 +381,10 @@ public class ProductServiceImpl implements ProductService {
         Product thisProduct = productRepository.getById(productId);
         Integer originalStock = thisProduct.getStock();
         thisProduct.setStock(originalStock - amount);   // 재고량변동
-        thisProduct.setSalesAmount(thisProduct.getSalesAmount() + amount); // 판매량 증가
+        thisProduct.setSales(thisProduct.getSales() + amount); // 판매량 증가
 
         if (thisProduct.getStock()==0) {
-            thisProduct.setSalesState(1);                    //만약 다 팔리면 품절상태로 전환
+            thisProduct.setSalesType(1);                    //만약 다 팔리면 품절상태로 전환
         }
     }
 
@@ -393,10 +393,10 @@ public class ProductServiceImpl implements ProductService {
         Product thisProduct = productRepository.getById(productId);
         Integer originalStock = thisProduct.getStock();
         thisProduct.setStock(originalStock - 1);   // 재고량변동
-        thisProduct.setSalesAmount(thisProduct.getSalesAmount() + 1); // 판매량 증가
+        thisProduct.setSales(thisProduct.getSales() + 1); // 판매량 증가
 
         if (thisProduct.getStock()==0) {
-            thisProduct.setSalesState(1);                    //만약 다 팔리면 품절상태로 전환
+            thisProduct.setSalesType(1);                    //만약 다 팔리면 품절상태로 전환
         }
     }
 

@@ -1,16 +1,11 @@
 package com.springboot.gguda.service.impl;
 
-import com.springboot.gguda.data.dto.RentalDto;
-import com.springboot.gguda.data.dto.RentalResponseDto;
 import com.springboot.gguda.data.dto.RentalStopReqDto;
 import com.springboot.gguda.data.dto.RentalStopReqResponseDto;
-import com.springboot.gguda.data.entity.Rental;
 import com.springboot.gguda.data.entity.RentalStopReq;
 import com.springboot.gguda.data.repository.MemberRepository;
 import com.springboot.gguda.data.repository.ProductRepository;
-import com.springboot.gguda.data.repository.RentalRepository;
 import com.springboot.gguda.data.repository.RentalStopReqRepository;
-import com.springboot.gguda.service.RentalService;
 import com.springboot.gguda.service.RentalStopReqService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
