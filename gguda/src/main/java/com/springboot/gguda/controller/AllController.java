@@ -2,7 +2,6 @@ package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.dto.apply.*;
-import com.springboot.gguda.data.entity.PurchaseProductInfo;
 import com.springboot.gguda.data.repository.CouponRepository;
 import com.springboot.gguda.result.DetailResult;
 import com.springboot.gguda.result.MainResult;
@@ -33,6 +32,8 @@ public class AllController {
     private final PurchaseService purchaseService;
     private final BasketService basketService;
     private final CouponRepository couponRepository;
+    private final RentalService rentalService;
+    private final RentalStopReqService rentalStopReqService;
 
     @Autowired
     public AllController(ProductService productService,
@@ -47,7 +48,9 @@ public class AllController {
                          ReserveHistoryService reserveHistoryService,
                          PurchaseService purchaseService,
                          BasketService basketService,
-                         CouponRepository couponRepository) {
+                         CouponRepository couponRepository,
+                         RentalService rentalService,
+                         RentalStopReqService rentalStopReqService) {
         this.productService = productService;
         this.questionService = questionService;
         this.questionAnswerService = questionAnswerService;
@@ -61,6 +64,8 @@ public class AllController {
         this.purchaseService = purchaseService;
         this.basketService = basketService;
         this.couponRepository = couponRepository;
+        this.rentalService = rentalService;
+        this.rentalStopReqService = rentalStopReqService;
     }
 
 
@@ -328,6 +333,60 @@ public class AllController {
         reserveHistoryService.createPurchaseReserveHistory(reservePrice, purchaseResponseDto.getMemberId());
 
         return purchaseResult;
+    }
+
+    // 렌탈하기 API
+    @PostMapping(value = "/rental-payment")
+    public RentalResponseDto createRental(@RequestBody RentalDto rentalDto) {
+        RentalResponseDto rentalResponseDto = rentalService.createRental(rentalDto);
+
+        return rentalResponseDto;
+    }
+
+    // 렌탈목록 조회 (회원별)
+    @GetMapping(value = "/rental-list/view")
+    public List<RentalResponseDto> getRentalList(Long memberId) {
+        List<RentalResponseDto> rentalResponseDtos = rentalService.getRentalList(memberId);
+
+            return rentalResponseDtos;
+
+    }
+
+    // 렌탈목록조회(전체회원)
+    @GetMapping(value = "/rental-list/allview")
+    public List<RentalResponseDto> getAllRentalList() {
+        List<RentalResponseDto> rentalResponseDtos = rentalService.getAllRentalList();
+
+        return rentalResponseDtos;
+
+    }
+
+
+    // 렌탈목록 Detail 조회
+    @GetMapping(value = "/rental/detail-view")
+    public RentalResponseDto getRentalDetail(Long rentalId) {
+        RentalResponseDto rentalResponseDto = rentalService.getRentalDetail(rentalId);
+
+        return rentalResponseDto;
+
+    }
+
+    // 렌탈목록 중지요청
+    @PostMapping(value = "/rental-stop-req/request")
+    public RentalStopReqResponseDto createRentalStopReq(@RequestBody RentalStopReqDto rentalStopReqDto) {
+        RentalStopReqResponseDto rentalStopReqResponseDto = rentalStopReqService.createRentalStopReq(rentalStopReqDto);
+
+        return rentalStopReqResponseDto;
+    }
+
+    // 렌탈목록 중지요청 조회(all)
+
+    @GetMapping(value = "/rental-stop-req/allview")
+    public List<RentalStopReqResponseDto> getAllRentalStopReqList() {
+        List<RentalStopReqResponseDto> rentalStopReqResponseDtos = rentalStopReqService.getAllRentalStopReq();
+
+        return rentalStopReqResponseDtos;
+
     }
 
 }
