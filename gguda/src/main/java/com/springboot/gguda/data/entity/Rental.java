@@ -28,7 +28,7 @@ public class Rental extends BaseEntity {
     private Integer rentalMonth;            // 렌탈개월수
 
     @Column(name = "month_price")
-    private Integer monthPrice;             // 다달이 결제금액
+    private Integer monthPrice;             //   다달이 결제금액
 
     @Column(name = "card_num")
     private String cardNum;            // 카드번호
