@@ -1,6 +1,7 @@
 package com.springboot.gguda.service;
 
 import com.springboot.gguda.data.dto.*;
+import com.springboot.gguda.result.LoginResult;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface MemberService {
 
     List<MemberResponseDto> getMemberList();
 
-    boolean login(String memberId, String memberPw);
+    LoginResult login(String memberId, String memberPw);
 
     boolean doubleCheck(String memberId);
 }

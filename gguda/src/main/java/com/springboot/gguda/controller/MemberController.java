@@ -5,6 +5,7 @@ import com.springboot.gguda.data.dto.MemberResponseDto;
 import com.springboot.gguda.data.entity.Member;
 import com.springboot.gguda.data.repository.CouponRepository;
 import com.springboot.gguda.data.repository.MemberRepository;
+import com.springboot.gguda.result.LoginResult;
 import com.springboot.gguda.result.MemberResult;
 import com.springboot.gguda.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +94,8 @@ public class MemberController {
 
     // Login API
     @PostMapping(value = "/login")
-    public  boolean login(String memberId, String memberPw) {
-        boolean result = memberService.login(memberId, memberPw);
+    public LoginResult login(String memberId, String memberPw) {
+        LoginResult result = memberService.login(memberId, memberPw);
         return result;
     }
 

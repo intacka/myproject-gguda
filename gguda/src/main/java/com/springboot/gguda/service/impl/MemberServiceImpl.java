@@ -10,6 +10,7 @@ import com.springboot.gguda.data.entity.Review;
 import com.springboot.gguda.data.repository.MemberRepository;
 import com.springboot.gguda.data.repository.ProductRepository;
 import com.springboot.gguda.data.repository.QuestionRepository;
+import com.springboot.gguda.result.LoginResult;
 import com.springboot.gguda.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,18 +119,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean login(String memberId, String memberPw) {
+    public LoginResult login(String memberId, String memberPw) {
 
         Optional<Member> optionalMember = memberRepository.findByMemberId(memberId);
 
         if (optionalMember.isPresent()) {
             if (optionalMember.get().getMemberPw().equals(memberPw)) {
-                return true;
+                Long id = optionalMember.get().getId();
+                return new LoginResult(true, id);
             } else {
-                return false;
+                return new LoginResult(false, null);
             }
         } else {
-            return false;
+            return new LoginResult(false, null);
         }
     }
 

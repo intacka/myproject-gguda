@@ -1,6 +1,5 @@
 package com.springboot.gguda.data.entity;
 
-import io.swagger.models.properties.EmailProperty;
 import lombok.*;
 
 import javax.persistence.*;
