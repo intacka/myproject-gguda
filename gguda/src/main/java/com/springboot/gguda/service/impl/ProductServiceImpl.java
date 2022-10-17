@@ -6,7 +6,6 @@ import com.springboot.gguda.data.repository.ProductRepository;
 import com.springboot.gguda.data.repository.QuestionAnswerRepository;
 import com.springboot.gguda.data.repository.QuestionRepository;
 import com.springboot.gguda.data.repository.ReviewRepository;
-import com.springboot.gguda.result.ProductResult;
 import com.springboot.gguda.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -44,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponseDto> getPopularTop10Product() {
         List<Product> popularTop10 = productRepository.findTop10ByOrderBySalesDesc();
-                // 판매순으로 10개 가져오기
+        // 판매순으로 10개 가져오기
 
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>(); // 2
 
@@ -138,26 +137,29 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(productDto.getStock());
         product.setSalesType(productDto.getSalesType());
 
+        if (files==null) {
+            product.setImageFiles(null);
+        } else {
+            List<ImageFile> forAddImageFile = new ArrayList<>();
+            for(MultipartFile file:files) {
+                // 파일 저장
+                String projectPath = System.getProperty("user.dir") + "\\gguda\\src\\main\\resources\\static\\files";
+                UUID uuid = UUID.randomUUID();
+                String fileName = uuid + "_" + file.getOriginalFilename();
+                File saveFile = new File(projectPath, fileName);
+                file.transferTo(saveFile);
 
-        List<ImageFile> forAddImageFile = new ArrayList<>();
-        for(MultipartFile file:files) {
-            // 파일 저장
-            String projectPath = System.getProperty("user.dir") + "\\gguda\\src\\main\\resources\\static\\files";
-            UUID uuid = UUID.randomUUID();
-            String fileName = uuid + "_" + file.getOriginalFilename();
-            File saveFile = new File(projectPath, fileName);
-            file.transferTo(saveFile);
+                ImageFile imageFile = new ImageFile();
+                imageFile.setFilename(fileName);
+                imageFile.setFilepath("/files/" + fileName);
 
-            ImageFile imageFile = new ImageFile();
-            imageFile.setFilename(fileName);
-            imageFile.setFilepath("/files/" + fileName);
+                forAddImageFile.add(imageFile);
+            }
+            product.setImageFiles(forAddImageFile);
 
-            forAddImageFile.add(imageFile);
         }
-        product.setImageFiles(forAddImageFile);
-//        product.setFilename(fileName);
-//        product.setFilepath("/files/" + fileName);
-        // hihihihi
+
+
         productRepository.save(product);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();

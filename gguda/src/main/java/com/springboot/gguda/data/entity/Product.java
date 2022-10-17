@@ -44,7 +44,7 @@ public class Product extends BaseEntity{
 //    private String filepath;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "image_file")
+    @JoinColumn(name = "image_file", nullable = true)
     private List<ImageFile> imageFiles = new ArrayList<>();      // 상품목록
 
 
