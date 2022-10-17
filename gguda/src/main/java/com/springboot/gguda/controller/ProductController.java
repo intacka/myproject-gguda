@@ -2,12 +2,15 @@ package com.springboot.gguda.controller;
 
 import com.springboot.gguda.data.dto.ProductDto;
 import com.springboot.gguda.data.dto.ProductResponseDto;
-import com.springboot.gguda.data.repository.CouponRepository;
 import com.springboot.gguda.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -19,10 +22,13 @@ public class ProductController {
     }
 
 
-    @PostMapping(value = "/register") //        상품등록하기
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto) {
-        ProductResponseDto productResponseDto = productService.saveProductDto(productDto);
 
+    @PostMapping(value = "/register") //        상품등록하기
+    public ResponseEntity<ProductResponseDto> createProduct(
+            ProductDto productDto,
+            @RequestPart(name = "images",  required=false) List<MultipartFile> files) throws IOException {
+        System.out.println(files.size());
+        ProductResponseDto productResponseDto = productService.saveProductDto(productDto, files);
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
     }
 
@@ -40,10 +46,5 @@ public class ProductController {
 
         return productResponseDto;
     }
-
-
-
-
-
 
 }

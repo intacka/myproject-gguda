@@ -2,7 +2,10 @@ package com.springboot.gguda.service;
 
 import com.springboot.gguda.data.dto.*;
 import com.springboot.gguda.data.entity.Product;
+import com.springboot.gguda.result.ProductResult;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
@@ -13,7 +16,7 @@ public interface ProductService {
 
     List<ProductResponseDto> getTop10Product(String name, String brand);
 
-    ProductResponseDto saveProductDto(ProductDto productDto);
+    ProductResponseDto saveProductDto(ProductDto productDto, List<MultipartFile> files) throws IOException;
 
     ProductResponseDto getProduct(Long id);
 

@@ -1,22 +1,24 @@
 package com.springboot.gguda.service.impl;
 
 import com.springboot.gguda.data.dto.*;
-import com.springboot.gguda.data.entity.Product;
-import com.springboot.gguda.data.entity.Question;
-import com.springboot.gguda.data.entity.QuestionAnswer;
-import com.springboot.gguda.data.entity.Review;
+import com.springboot.gguda.data.entity.*;
 import com.springboot.gguda.data.repository.ProductRepository;
 import com.springboot.gguda.data.repository.QuestionAnswerRepository;
 import com.springboot.gguda.data.repository.QuestionRepository;
 import com.springboot.gguda.data.repository.ReviewRepository;
+import com.springboot.gguda.result.ProductResult;
 import com.springboot.gguda.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -57,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
+                    .imageFiles(product.getImageFiles())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -83,6 +86,7 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
+                    .imageFiles(product.getImageFiles())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -109,6 +113,7 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
+                    .imageFiles(product.getImageFiles())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -123,7 +128,8 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductResponseDto saveProductDto(ProductDto productDto) {
+    public ProductResponseDto saveProductDto(ProductDto productDto, List<MultipartFile> files) throws IOException {
+
         Product product = new Product();
         product.setPrice(productDto.getPrice());
         product.setName(productDto.getName());
@@ -132,6 +138,26 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(productDto.getStock());
         product.setSalesType(productDto.getSalesType());
 
+
+        List<ImageFile> forAddImageFile = new ArrayList<>();
+        for(MultipartFile file:files) {
+            // 파일 저장
+            String projectPath = System.getProperty("user.dir") + "\\gguda\\src\\main\\resources\\static\\files";
+            UUID uuid = UUID.randomUUID();
+            String fileName = uuid + "_" + file.getOriginalFilename();
+            File saveFile = new File(projectPath, fileName);
+            file.transferTo(saveFile);
+
+            ImageFile imageFile = new ImageFile();
+            imageFile.setFilename(fileName);
+            imageFile.setFilepath("/files/" + fileName);
+
+            forAddImageFile.add(imageFile);
+        }
+        product.setImageFiles(forAddImageFile);
+//        product.setFilename(fileName);
+//        product.setFilepath("/files/" + fileName);
+        // hihihihi
         productRepository.save(product);
 
         ProductResponseDto productResponseDto = new ProductResponseDto();
@@ -144,8 +170,11 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
+        productResponseDto.setImageFiles(product.getImageFiles());
 
         return productResponseDto;
+
+
     }
 
     @Override
@@ -162,6 +191,7 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
+        productResponseDto.setImageFiles(product.getImageFiles());
 
 
         return productResponseDto;
@@ -263,6 +293,7 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
+                    .imageFiles(product.getImageFiles())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -288,6 +319,7 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .stock(product.getStock())
                     .salesType(product.getSalesType())
+                    .imageFiles(product.getImageFiles())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -313,6 +345,7 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .stock(product.getStock())
                     .salesType(product.getSalesType())
+                    .imageFiles(product.getImageFiles())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -344,6 +377,7 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
+        productResponseDto.setImageFiles(product.getImageFiles());
 
         return productResponseDto;
     }

@@ -3,6 +3,8 @@ package com.springboot.gguda.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -35,5 +37,15 @@ public class Product extends BaseEntity{
     @Column(name = "brand")
     private String brand; // 브랜드
 
-    // 상세사진 첨부 할수있어야함
+//    @Column(name = "filename")
+//    private String filename;
+//
+//    @Column(name = "filepath")
+//    private String filepath;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_file")
+    private List<ImageFile> imageFiles = new ArrayList<>();      // 상품목록
+
+
 }
