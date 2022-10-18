@@ -14,7 +14,7 @@ public interface ProductService {
 
     List<ProductResponseDto> getTop10Product(String name, String brand);
 
-    ProductResponseDto saveProductDto(ProductDto productDto, List<MultipartFile> files) throws IOException;
+    ProductResponseDto saveProductDto(ProductDto productDto, MultipartFile file) throws IOException;
 
     ProductResponseDto getProduct(Long id);
 

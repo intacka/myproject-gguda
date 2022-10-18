@@ -26,9 +26,9 @@ public class ProductController {
     @PostMapping(value = "/register") //        상품등록하기
     public ResponseEntity<ProductResponseDto> createProduct(
             ProductDto productDto,
-            @RequestPart(name = "images",  required=false) List<MultipartFile> files) throws IOException {
+            MultipartFile file) throws IOException {
 
-        ProductResponseDto productResponseDto = productService.saveProductDto(productDto, files);
+        ProductResponseDto productResponseDto = productService.saveProductDto(productDto, file);
 
         return ResponseEntity.status(HttpStatus.OK).body(productResponseDto);
     }

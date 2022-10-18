@@ -127,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public ProductResponseDto saveProductDto(ProductDto productDto, List<MultipartFile> files) throws IOException {
+    public ProductResponseDto saveProductDto(ProductDto productDto, MultipartFile file) throws IOException {
 
         Product product = new Product();
         product.setPrice(productDto.getPrice());
@@ -137,11 +137,10 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(productDto.getStock());
         product.setSalesType(productDto.getSalesType());
 
-        if (files==null) {
+        if (file==null) {
             product.setImageFiles(null);
         } else {
-            List<ImageFile> forAddImageFile = new ArrayList<>();
-            for(MultipartFile file:files) {
+
                 // 파일 저장
                 String projectPath = System.getProperty("user.dir") + "\\gguda\\src\\main\\resources\\static\\files";
                 UUID uuid = UUID.randomUUID();
@@ -149,13 +148,8 @@ public class ProductServiceImpl implements ProductService {
                 File saveFile = new File(projectPath, fileName);
                 file.transferTo(saveFile);
 
-                ImageFile imageFile = new ImageFile();
-                imageFile.setFilename(fileName);
-                imageFile.setFilepath("/files/" + fileName);
-
-                forAddImageFile.add(imageFile);
-            }
-            product.setImageFiles(forAddImageFile);
+            product.setFilename(fileName);
+            product.setFilepath("/files/" + fileName);
 
         }
 
@@ -172,7 +166,8 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
-        productResponseDto.setImageFiles(product.getImageFiles());
+        productResponseDto.setFilepath(product.getFilepath());
+        productResponseDto.setFilename(product.getFilename());
 
         return productResponseDto;
 

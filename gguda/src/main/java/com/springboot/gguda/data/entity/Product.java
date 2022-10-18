@@ -41,5 +41,11 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "image_file", nullable = true)
     private List<ImageFile> imageFiles = new ArrayList<>();      // 상품목록
 
+    @Column(name = "filename")
+    private String filename;
+
+    @Column(name = "filepath")
+    private String filepath;
+
 
 }
