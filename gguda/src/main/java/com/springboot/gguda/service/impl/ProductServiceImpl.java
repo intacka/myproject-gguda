@@ -270,6 +270,7 @@ public class ProductServiceImpl implements ProductService {
                     .updatedAt(review.getUpdatedAt())
                     .productId(review.getProduct().getId())
                     .memberId(review.getMember().getId())
+                    .imageFiles(review.getImageFiles())
                     .build();
 
             reviewResponseDtoList.add(dto);

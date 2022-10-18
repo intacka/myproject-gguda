@@ -37,12 +37,6 @@ public class Product extends BaseEntity{
     @Column(name = "brand")
     private String brand; // 브랜드
 
-//    @Column(name = "filename")
-//    private String filename;
-//
-//    @Column(name = "filepath")
-//    private String filepath;
-
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "image_file", nullable = true)
     private List<ImageFile> imageFiles = new ArrayList<>();      // 상품목록

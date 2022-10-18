@@ -3,6 +3,8 @@ package com.springboot.gguda.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -25,4 +27,10 @@ public class EventProduct extends BaseEntity{
 
     @Column(name = "sort")
     private String sort; // 종류
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_file", nullable = true)
+    private List<ImageFile> imageFiles = new ArrayList<>();      // 상품목록
+
+
 }

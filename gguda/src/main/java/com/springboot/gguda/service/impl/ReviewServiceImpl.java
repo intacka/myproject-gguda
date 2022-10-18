@@ -4,6 +4,7 @@ import com.springboot.gguda.data.dto.ProductResponseDto;
 import com.springboot.gguda.data.dto.QuestionResponseDto;
 import com.springboot.gguda.data.dto.ReviewDto;
 import com.springboot.gguda.data.dto.ReviewResponseDto;
+import com.springboot.gguda.data.entity.ImageFile;
 import com.springboot.gguda.data.entity.Product;
 import com.springboot.gguda.data.entity.Question;
 import com.springboot.gguda.data.entity.Review;
@@ -16,9 +17,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -35,12 +40,36 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResponseDto saveReviewDto(ReviewDto reviewDto) {
+    public ReviewResponseDto saveReviewDto(ReviewDto reviewDto, List<MultipartFile> files) throws IOException {
         Review review = new Review();
         review.setContent(reviewDto.getContent());
         review.setStars(reviewDto.getStars());
         review.setProduct(productRepository.findById(reviewDto.getProductId()).get());
         review.setMember(memberRepository.findById(reviewDto.getMemberId()).get());
+
+
+        if (files==null) {
+            review.setImageFiles(null);
+        } else {
+            List<ImageFile> forAddImageFile = new ArrayList<>();
+            for(MultipartFile file:files) {
+                // 파일 저장
+                String projectPath = System.getProperty("user.dir") + "\\gguda\\src\\main\\resources\\static\\files";
+                UUID uuid = UUID.randomUUID();
+                String fileName = uuid + "_" + file.getOriginalFilename();
+                File saveFile = new File(projectPath, fileName);
+                file.transferTo(saveFile);
+
+                ImageFile imageFile = new ImageFile();
+                imageFile.setFilename(fileName);
+                imageFile.setFilepath("/files/" + fileName);
+
+                forAddImageFile.add(imageFile);
+            }
+            review.setImageFiles(forAddImageFile);
+
+        }
+
 
         reviewRepository.save(review);
 
@@ -52,6 +81,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewResponseDto.setUpdatedAt(review.getUpdatedAt());
         reviewResponseDto.setProductId(review.getProduct().getId());
         reviewResponseDto.setMemberId(review.getMember().getId());
+        reviewResponseDto.setImageFiles(review.getImageFiles());
 
         return reviewResponseDto;
     }
@@ -73,6 +103,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .memberId(review.getMember().getId())
                     .createdAt(review.getCreatedAt())
                     .updatedAt(review.getUpdatedAt())
+                    .imageFiles(review.getImageFiles())
                     .build();
 
             reviewResponseDtoList.add(dto);
@@ -96,6 +127,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .memberId(review.getMember().getId())
                     .createdAt(review.getCreatedAt())
                     .updatedAt(review.getUpdatedAt())
+                    .imageFiles(review.getImageFiles())
                     .build();
 
             reviewResponseDtoList.add(dto);
@@ -116,6 +148,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewResponseDto.setUpdatedAt(review.getUpdatedAt());
         reviewResponseDto.setProductId(review.getProduct().getId());
         reviewResponseDto.setMemberId(review.getMember().getId());
+        reviewResponseDto.setImageFiles(review.getImageFiles());
 
         return reviewResponseDto;
     }
@@ -135,6 +168,7 @@ public class ReviewServiceImpl implements ReviewService {
                     .memberId(review.getMember().getId())
                     .createdAt(review.getCreatedAt())
                     .updatedAt(review.getUpdatedAt())
+                    .imageFiles(review.getImageFiles())
                     .build();
 
             reviewResponseDtoList.add(dto);
@@ -160,6 +194,7 @@ public class ReviewServiceImpl implements ReviewService {
         reviewResponseDto.setMemberId(review.getMember().getId());
         reviewResponseDto.setCreatedAt(review.getCreatedAt());
         reviewResponseDto.setUpdatedAt(review.getUpdatedAt());
+        reviewResponseDto.setImageFiles(review.getImageFiles());
 
         return reviewResponseDto;
     }

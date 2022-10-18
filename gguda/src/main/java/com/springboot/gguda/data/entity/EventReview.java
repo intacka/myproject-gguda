@@ -3,6 +3,8 @@ package com.springboot.gguda.data.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -30,5 +32,10 @@ public class EventReview extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_id")            // Member 엔티티와 다대일설정. 외래키 이름 = "member_id"
     private Member member;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_file", nullable = true)
+    private List<ImageFile> imageFiles = new ArrayList<>();      // 이미지
+
 
 }

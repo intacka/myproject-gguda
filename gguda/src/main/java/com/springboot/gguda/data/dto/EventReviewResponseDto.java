@@ -1,8 +1,11 @@
 package com.springboot.gguda.data.dto;
 
+import com.springboot.gguda.data.entity.ImageFile;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,5 +22,6 @@ public class EventReviewResponseDto {
     private LocalDateTime updatedAt; // 수정날짜
     private Long eventProductId;
     private Long memberId;
+    private List<ImageFile> imageFiles;
 
 }

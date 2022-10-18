@@ -9,10 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EventProductServiceImpl implements EventProductService {
@@ -52,6 +56,7 @@ public class EventProductServiceImpl implements EventProductService {
                     .salesType(eventProduct.getSalesType())
                     .createdAt(eventProduct.getCreatedAt())
                     .updatedAt(eventProduct.getUpdatedAt())
+                    .imageFiles(eventProduct.getImageFiles())
                     .build();
 
             eventProductResponseDtoList.add(dto);
@@ -76,6 +81,7 @@ public class EventProductServiceImpl implements EventProductService {
                     .salesType(eventProduct.getSalesType())
                     .createdAt(eventProduct.getCreatedAt())
                     .updatedAt(eventProduct.getUpdatedAt())
+                    .imageFiles(eventProduct.getImageFiles())
                     .build();
 
             eventProductResponseDtoList.add(dto);
@@ -86,11 +92,35 @@ public class EventProductServiceImpl implements EventProductService {
 
 
     @Override
-    public EventProductResponseDto saveEventProductDto(EventProductDto eventProductDto) {
+    public EventProductResponseDto saveEventProductDto(EventProductDto eventProductDto, List<MultipartFile> files) throws IOException {
         EventProduct eventProduct = new EventProduct();
         eventProduct.setName(eventProductDto.getName());
         eventProduct.setSort(eventProductDto.getSort());
         eventProduct.setSalesType(eventProductDto.getSalesType());
+
+
+        if (files==null) {
+            eventProduct.setImageFiles(null);
+        } else {
+            List<ImageFile> forAddImageFile = new ArrayList<>();
+            for(MultipartFile file:files) {
+                // 파일 저장
+                String projectPath = System.getProperty("user.dir") + "\\gguda\\src\\main\\resources\\static\\files";
+                UUID uuid = UUID.randomUUID();
+                String fileName = uuid + "_" + file.getOriginalFilename();
+                File saveFile = new File(projectPath, fileName);
+                file.transferTo(saveFile);
+
+                ImageFile imageFile = new ImageFile();
+                imageFile.setFilename(fileName);
+                imageFile.setFilepath("/files/" + fileName);
+
+                forAddImageFile.add(imageFile);
+            }
+            eventProduct.setImageFiles(forAddImageFile);
+
+        }
+
 
         eventProductRepository.save(eventProduct);
 
@@ -101,6 +131,7 @@ public class EventProductServiceImpl implements EventProductService {
         eventProductResponseDto.setSalesType(eventProduct.getSalesType());
         eventProductResponseDto.setCreatedAt(eventProduct.getCreatedAt());
         eventProductResponseDto.setUpdatedAt(eventProduct.getUpdatedAt());
+        eventProductResponseDto.setImageFiles(eventProduct.getImageFiles());
 
 
         return eventProductResponseDto;
@@ -117,6 +148,7 @@ public class EventProductServiceImpl implements EventProductService {
         eventProductResponseDto.setSort(eventProduct.getSort());
         eventProductResponseDto.setName(eventProduct.getName());
         eventProductResponseDto.setSalesType(eventProduct.getSalesType());
+        eventProductResponseDto.setImageFiles(eventProduct.getImageFiles());
 
         return eventProductResponseDto;
     }
@@ -163,6 +195,7 @@ public class EventProductServiceImpl implements EventProductService {
                     .updatedAt(eventReview.getUpdatedAt())
                     .eventProductId(eventReview.getEventProduct().getId())
                     .memberId(eventReview.getMember().getId())
+                    .imageFiles(eventReview.getImageFiles())
                     .build();
 
             eventReviewResponseDtoList.add(dto);
@@ -188,6 +221,7 @@ public class EventProductServiceImpl implements EventProductService {
         eventProductResponseDto.setSort(eventProduct.getSort());
         eventProductResponseDto.setCreatedAt(eventProduct.getCreatedAt());
         eventProductResponseDto.setUpdatedAt(eventProduct.getUpdatedAt());
+        eventProductResponseDto.setImageFiles(eventProduct.getImageFiles());
 
         return eventProductResponseDto;
     }
@@ -200,6 +234,7 @@ public class EventProductServiceImpl implements EventProductService {
         eventProduct.setName(null);
         eventProduct.setSalesType(null);
         eventProduct.setSort(null);
+        eventProduct.setImageFiles(null);
 
         eventProductRepository.save(eventProduct);
 
@@ -210,6 +245,7 @@ public class EventProductServiceImpl implements EventProductService {
         eventProductResponseDto.setSort(eventProduct.getSort());
         eventProductResponseDto.setCreatedAt(eventProduct.getCreatedAt());
         eventProductResponseDto.setUpdatedAt(eventProduct.getUpdatedAt());
+        eventProductResponseDto.setImageFiles(eventProduct.getImageFiles());
 
         return eventProductResponseDto;
     }

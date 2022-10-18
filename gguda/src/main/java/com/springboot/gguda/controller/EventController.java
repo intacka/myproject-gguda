@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -41,8 +43,10 @@ public class EventController {
 
     // 행사상품등록하기
     @PostMapping(value = "/product/register")
-    public ResponseEntity<EventProductResponseDto> createEventProduct(@RequestBody EventProductDto eventProductDto) {
-        EventProductResponseDto eventProductResponseDto = eventProductService.saveEventProductDto(eventProductDto);
+    public ResponseEntity<EventProductResponseDto> createEventProduct(
+                    @RequestBody EventProductDto eventProductDto,
+                    @RequestPart(name = "images", required=false) List<MultipartFile> files) throws IOException {
+        EventProductResponseDto eventProductResponseDto = eventProductService.saveEventProductDto(eventProductDto, files);
 
         return ResponseEntity.status(HttpStatus.OK).body(eventProductResponseDto);
     }
@@ -117,8 +121,10 @@ public class EventController {
     }
 
     @PostMapping(value = "review/register") // 행사용품 후기 등록하기
-    public ResponseEntity<EventReviewResponseDto> createEventReview(@RequestBody EventReviewDto eventReviewDto) {
-        EventReviewResponseDto eventReviewResponseDto = eventReviewService.saveEventReviewDto(eventReviewDto);
+    public ResponseEntity<EventReviewResponseDto> createEventReview(
+            @RequestBody EventReviewDto eventReviewDto,
+            @RequestPart(name = "images", required = false) List<MultipartFile> files) throws IOException {
+        EventReviewResponseDto eventReviewResponseDto = eventReviewService.saveEventReviewDto(eventReviewDto, files);
 
         return ResponseEntity.status(HttpStatus.OK).body(eventReviewResponseDto);
     }
