@@ -31,7 +31,7 @@ public class ReviewController {
 
     @PostMapping(value = "/register") //       후기 등록하기
     public ResponseEntity<ReviewResponseDto> createReview(
-            @RequestBody ReviewDto reviewDto,
+            ReviewDto reviewDto,
             @RequestPart(name = "images",  required=false) List<MultipartFile> files) throws IOException {
         ReviewResponseDto reviewResponseDto = reviewService.saveReviewDto(reviewDto, files);
         reserveHistoryService.createReviewReserveHistory(reviewResponseDto.getMemberId());      // 후기쓰면 50원 적립, 내역도 추가

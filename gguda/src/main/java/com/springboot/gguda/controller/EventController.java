@@ -44,7 +44,7 @@ public class EventController {
     // 행사상품등록하기
     @PostMapping(value = "/product/register")
     public ResponseEntity<EventProductResponseDto> createEventProduct(
-                    @RequestBody EventProductDto eventProductDto,
+                    EventProductDto eventProductDto,
                     @RequestPart(name = "images", required=false) List<MultipartFile> files) throws IOException {
         EventProductResponseDto eventProductResponseDto = eventProductService.saveEventProductDto(eventProductDto, files);
 
@@ -122,7 +122,7 @@ public class EventController {
 
     @PostMapping(value = "review/register") // 행사용품 후기 등록하기
     public ResponseEntity<EventReviewResponseDto> createEventReview(
-            @RequestBody EventReviewDto eventReviewDto,
+            EventReviewDto eventReviewDto,
             @RequestPart(name = "images", required = false) List<MultipartFile> files) throws IOException {
         EventReviewResponseDto eventReviewResponseDto = eventReviewService.saveEventReviewDto(eventReviewDto, files);
 
