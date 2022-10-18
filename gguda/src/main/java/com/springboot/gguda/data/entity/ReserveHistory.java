@@ -20,7 +20,7 @@ public class ReserveHistory extends BaseEntity{
     private String reason;  // 사유
 
     @Column(name = "history_price")
-    private Integer historyPrice = -1;    // 변동금액
+    private Integer historyPrice;    // 변동금액
 
     @Column(name = "type")
     private Integer type; // 유형 (지급:0, 사용:1)

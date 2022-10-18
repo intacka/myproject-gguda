@@ -17,6 +17,7 @@ public class PurchaseProductInfo{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                    // 고유 id
+    @Column(name = "product_id")
     private Integer productId;      // 상품고유아이디
     private Integer amount;         // 수량
 

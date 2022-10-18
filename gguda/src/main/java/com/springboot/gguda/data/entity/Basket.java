@@ -20,7 +20,7 @@ public class Basket extends BaseEntity{
     @Column(name = "amount")
     private Long amount;
 
-    @Column(name = "product_total_price")
+    @Column(name = "median_price")
     private Long medianPrice;             // 중간금액
 
     @ManyToOne
