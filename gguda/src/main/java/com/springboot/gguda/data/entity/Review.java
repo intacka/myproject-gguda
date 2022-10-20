@@ -34,9 +34,15 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "member_id")            // Member 엔티티와 다대일설정. 외래키 이름 = "member_id"
     private Member member;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "image_file", nullable = true)
-    private List<ImageFile> imageFiles = new ArrayList<>();      // 이미지
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "image_file", nullable = true)
+//    private List<ImageFile> imageFiles = new ArrayList<>();      // 이미지
+
+    @Column(name = "filename")
+    private String filename;
+
+    @Column(name = "filepath")
+    private String filepath;
 
 
 }

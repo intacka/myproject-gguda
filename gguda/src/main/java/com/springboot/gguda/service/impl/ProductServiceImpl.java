@@ -58,7 +58,8 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
-                    .imageFiles(product.getImageFiles())
+                    .filepath(product.getFilepath())
+                    .filename(product.getFilename())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -85,7 +86,8 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
-                    .imageFiles(product.getImageFiles())
+                    .filepath(product.getFilepath())
+                    .filename(product.getFilename())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -112,7 +114,8 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
-                    .imageFiles(product.getImageFiles())
+                    .filepath(product.getFilepath())
+                    .filename(product.getFilename())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -138,7 +141,8 @@ public class ProductServiceImpl implements ProductService {
         product.setSalesType(productDto.getSalesType());
 
         if (file==null) {
-            product.setImageFiles(null);
+            product.setFilename(null);
+            product.setFilepath(null);
         } else {
 
                 // 파일 저장
@@ -188,7 +192,8 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setBrand(product.getBrand());
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
-        productResponseDto.setImageFiles(product.getImageFiles());
+        productResponseDto.setFilename(product.getFilename());
+        productResponseDto.setFilepath(product.getFilepath());
 
 
         return productResponseDto;
@@ -231,9 +236,10 @@ public class ProductServiceImpl implements ProductService {
         for(Question question : questions){
 
             Long questionIdTemp = question.getId();
-            if (questionIdTemp != null) {
-                QuestionAnswer questionAnswer = questionAnswerRepository.getByQuestionId(questionIdTemp);
 
+
+            QuestionAnswer questionAnswer = questionAnswerRepository.findByQuestionId(questionIdTemp);
+            if (questionAnswer!=null) {
                 QuestionAnswerResponseDto dto = QuestionAnswerResponseDto.builder()
                         .id(questionAnswer.getId())
                         .content(questionAnswer.getContent())
@@ -244,7 +250,9 @@ public class ProductServiceImpl implements ProductService {
                         .build();
 
                 questionAnswerResponseDtoList.add(dto);
+
             }
+
         }
 
         return questionAnswerResponseDtoList;
@@ -265,7 +273,8 @@ public class ProductServiceImpl implements ProductService {
                     .updatedAt(review.getUpdatedAt())
                     .productId(review.getProduct().getId())
                     .memberId(review.getMember().getId())
-                    .imageFiles(review.getImageFiles())
+                    .filename(review.getFilename())
+                    .filepath(review.getFilepath())
                     .build();
 
             reviewResponseDtoList.add(dto);
@@ -291,7 +300,8 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .salesType(product.getSalesType())
                     .stock(product.getStock())
-                    .imageFiles(product.getImageFiles())
+                    .filename(product.getFilename())
+                    .filepath(product.getFilepath())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -317,7 +327,8 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .stock(product.getStock())
                     .salesType(product.getSalesType())
-                    .imageFiles(product.getImageFiles())
+                    .filename(product.getFilename())
+                    .filepath(product.getFilepath())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -343,7 +354,8 @@ public class ProductServiceImpl implements ProductService {
                     .brand(product.getBrand())
                     .stock(product.getStock())
                     .salesType(product.getSalesType())
-                    .imageFiles(product.getImageFiles())
+                    .filename(product.getFilename())
+                    .filepath(product.getFilepath())
                     .build();
 
             productResponseDtoList.add(dto);
@@ -375,7 +387,8 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
-        productResponseDto.setImageFiles(product.getImageFiles());
+        productResponseDto.setFilepath(product.getFilepath());
+        productResponseDto.setFilename(product.getFilename());
 
         return productResponseDto;
     }
@@ -404,6 +417,8 @@ public class ProductServiceImpl implements ProductService {
         productResponseDto.setStock(product.getStock());
         productResponseDto.setSalesType(product.getSalesType());
         productResponseDto.setId(product.getId());
+        productResponseDto.setFilename(product.getFilename());
+        productResponseDto.setFilepath(product.getFilepath());
 
         return productResponseDto;
     }

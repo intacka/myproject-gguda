@@ -3,6 +3,7 @@ package com.springboot.gguda.data.dto;
 import com.springboot.gguda.data.entity.ImageFile;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -26,7 +27,8 @@ public class ReviewResponseDto {
     private LocalDateTime updatedAt; // 수정날짜
     private Long productId;
     private Long memberId;
-    private List<ImageFile> imageFiles;
+    private String filename;
+    private String filepath;
 
 
 }

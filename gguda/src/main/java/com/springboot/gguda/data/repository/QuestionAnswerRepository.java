@@ -10,4 +10,6 @@ public interface QuestionAnswerRepository extends JpaRepository<QuestionAnswer, 
     QuestionAnswer getByQuestionId(Long id);
 
     List<QuestionAnswer> findAllByOrderByCreatedAtDesc();
+
+    QuestionAnswer findByQuestionId(Long questionIdTemp);
 }

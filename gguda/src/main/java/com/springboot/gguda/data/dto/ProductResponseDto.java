@@ -25,7 +25,7 @@ public class ProductResponseDto {
     private String brand; // 브랜드
     private Integer stock; // 재고량
     private Integer salesType; // 판매상태(판매중,품절)
-    private List<ImageFile> imageFiles;
+//    private List<ImageFile> imageFiles;
     private String filename;
     private String filepath;
 }

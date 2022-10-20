@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ReviewService {
 
-    ReviewResponseDto saveReviewDto(ReviewDto reviewDto, List<MultipartFile> files) throws IOException;
+    ReviewResponseDto saveReviewDto(ReviewDto reviewDto, MultipartFile file) throws IOException;
 
 
     List<ReviewResponseDto> getReviewPage(String content, int page);

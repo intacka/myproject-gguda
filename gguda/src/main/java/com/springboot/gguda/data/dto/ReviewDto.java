@@ -2,6 +2,7 @@ package com.springboot.gguda.data.dto;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import java.util.Date;
 
 @Data
