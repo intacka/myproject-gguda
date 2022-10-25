@@ -29,6 +29,8 @@ public class ApplymentPartnersResponseDto {
     private String ggudaId;
     private String adminId;
     private String etcContent;
+    private String email;
+    private String taxEmail;
 
     private Long memberId;
     private LocalDateTime createdAt; // 등록날짜

@@ -51,6 +51,8 @@ public class ApplymentPartnersServiceImpl implements ApplymentPartnersService {
         applymentPartners.setGgudaId(applymentPartnersDto.getGgudaId());
         applymentPartners.setAdminId(applymentPartnersDto.getAdminId());
         applymentPartners.setEtcContent(applymentPartnersDto.getEtcContent());
+        applymentPartners.setEmail(applymentPartnersDto.getEmail());
+        applymentPartners.setTaxEmail(applymentPartnersDto.getTaxEmail());
         applymentPartners.setMember(memberRepository.findById(applymentPartnersDto.getMemberId()).get());
 
         applymentPartnersRepository.save(applymentPartners);
@@ -74,6 +76,8 @@ public class ApplymentPartnersServiceImpl implements ApplymentPartnersService {
         applymentPartnersResponseDto.setMemberId(applymentPartners.getMember().getId());
         applymentPartnersResponseDto.setCreatedAt(applymentPartners.getCreatedAt());
         applymentPartnersResponseDto.setUpdatedAt(applymentPartners.getUpdatedAt());
+        applymentPartnersResponseDto.setEmail(applymentPartners.getEmail());
+        applymentPartnersResponseDto.setTaxEmail(applymentPartners.getTaxEmail());
 
         return applymentPartnersResponseDto;
     }
@@ -103,6 +107,9 @@ public class ApplymentPartnersServiceImpl implements ApplymentPartnersService {
                     .memberId(applymentPartners.getMember().getId())
                     .createdAt(applymentPartners.getCreatedAt())
                     .updatedAt(applymentPartners.getUpdatedAt())
+                    .name(applymentPartners.getName())
+                    .email(applymentPartners.getEmail())
+                    .taxEmail(applymentPartners.getTaxEmail())
                     .build();
 
             applymentPartnersResponseDtoList.add(dto);

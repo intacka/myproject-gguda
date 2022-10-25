@@ -46,6 +46,10 @@ public class ApplymentPartners extends BaseEntity {
     private String adminId;
     @Column(name = "etc_content", columnDefinition = "TEXT")
     private String etcContent;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "tax_email")
+    private String taxEmail;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

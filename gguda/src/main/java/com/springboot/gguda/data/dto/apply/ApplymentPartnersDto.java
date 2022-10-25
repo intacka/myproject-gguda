@@ -2,6 +2,8 @@ package com.springboot.gguda.data.dto.apply;
 
 import lombok.*;
 
+import javax.persistence.Column;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +27,7 @@ public class ApplymentPartnersDto {
     private String ggudaId;
     private String adminId;
     private String etcContent;
-
+    private String email;
+    private String taxEmail;
     private Long memberId;
 }
